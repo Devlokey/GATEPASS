@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="[https://raw.githubusercontent.com/your-username/gatepass/main/public/logo.png](https://github.com/Devlokey/GATEPASS/blob/main/Gatepass.png?raw=true)" alt="Gatepass Logo" width="80" />
+<img src="https://github.com/Devlokey/GATEPASS/blob/main/gatep.png?raw=true" alt="Gatepass Logo" width="200" />
 
 # Gatepass
 
