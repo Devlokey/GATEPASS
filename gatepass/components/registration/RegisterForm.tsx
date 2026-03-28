@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Event, TicketType, FormField } from "@/types";
@@ -21,7 +22,6 @@ export default function RegisterForm({ event }: RegisterFormProps) {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [registrationId, setRegistrationId] = useState("");
   const [qrCode, setQrCode] = useState("");
   const [isWaitlisted, setIsWaitlisted] = useState(false);
 
@@ -53,7 +53,6 @@ export default function RegisterForm({ event }: RegisterFormProps) {
         return;
       }
 
-      setRegistrationId(data.registration_id);
       setIsWaitlisted(data.status === "waitlisted");
 
       if (data.payment_required) {
@@ -103,7 +102,7 @@ export default function RegisterForm({ event }: RegisterFormProps) {
           },
         },
       };
-      // @ts-ignore — Razorpay loaded via <script> in layout
+      // @ts-expect-error — Razorpay loaded via <script> in layout
       const rzp = new window.Razorpay(options);
       rzp.open();
     });
@@ -270,11 +269,12 @@ export default function RegisterForm({ event }: RegisterFormProps) {
       {qrCode && !isWaitlisted && (
         <div className="success-qr">
           <p className="success-qr-label">Your check-in QR code</p>
-          <img
+          <Image
             src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrCode}`}
             alt="QR Code"
             width={200}
             height={200}
+            unoptimized
           />
           <p className="success-qr-code">{qrCode}</p>
         </div>
