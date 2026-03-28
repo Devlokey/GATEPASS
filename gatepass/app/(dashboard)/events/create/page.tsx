@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { rupeesToPaise } from '@/lib/utils';
@@ -66,7 +65,6 @@ let ticketIdCounter = 2;
 
 /* ── Component ── */
 export default function CreateEventPage() {
-  const router = useRouter();
   const [step, setStep] = useState<Step>(1);
   const [form, setForm] = useState<FormData>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<string, string>>>({});
