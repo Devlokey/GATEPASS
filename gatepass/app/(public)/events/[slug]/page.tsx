@@ -1,4 +1,6 @@
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import type { TicketType } from '@/types';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { formatDate, formatPrice } from '@/lib/utils';
@@ -49,12 +51,6 @@ export default async function EventPage({ params }: PageProps) {
     .eq('event_id', event.id)
     .in('status', ['confirmed', 'pending']);
 
-  // Count check-ins
-  const { count: checkinCount } = await supabase
-    .from('check_ins')
-    .select('id', { count: 'exact', head: true })
-    .eq('registration_id', event.id); // will be 0 if none
-
   const registered = registeredCount ?? 0;
   const capacity = event.capacity ?? 0;
   const spotsLeft = capacity > 0 ? Math.max(0, capacity - registered) : null;
@@ -64,7 +60,7 @@ export default async function EventPage({ params }: PageProps) {
   const organizerName = organizer?.full_name ?? 'Organizer';
   const organizerInitials = organizerName.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase();
 
-  const activeTickets = (event.ticket_types ?? []).filter((t: any) => t.is_active);
+  const activeTickets = (event.ticket_types ?? []).filter((t: TicketType) => t.is_active);
 
   return (
     <>
@@ -74,7 +70,7 @@ export default async function EventPage({ params }: PageProps) {
       <div className="ev-hero">
         <div className="ev-hero-banner">
           {event.banner_url ? (
-            <img src={event.banner_url} alt={event.title} className="ev-hero-banner-img" />
+            <Image src={event.banner_url} alt={event.title} className="ev-hero-banner-img" fill style={{ objectFit: "cover" }} />
           ) : (
             <>
               <div className="ev-orb ev-orb1" />
@@ -204,7 +200,7 @@ export default async function EventPage({ params }: PageProps) {
             </div>
             <div className="ev-ticket-list">
               {activeTickets.length > 0 ? (
-                activeTickets.map((tk: any, i: number) => (
+                activeTickets.map((tk: TicketType, i: number) => (
                   <div key={tk.id} className={`ev-tk${i === 0 ? ' ev-tk-sel' : ''}`}>
                     <div className="ev-tk-l">
                       <div className="ev-tk-name">{tk.name}</div>

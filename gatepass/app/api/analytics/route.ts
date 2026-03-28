@@ -1,6 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import type { EventAnalytics } from "@/types";
+import type { EventAnalytics, RegistrationStatus, PaymentStatus } from "@/types";
+
+type CsvReg = {
+  attendee_name: string;
+  attendee_email: string;
+  attendee_phone: string | null;
+  status: RegistrationStatus;
+  payment_status: PaymentStatus;
+  created_at: string;
+  ticket_types: { name: string } | null;
+  check_ins: { checked_in_at: string }[];
+};
+
+type AnalyticsReg = {
+  status: RegistrationStatus;
+  payment_status: PaymentStatus;
+  ticket_type_id: string | null;
+  ticket_types: { id: string; name: string; price: number } | null;
+  check_ins: { id: string }[];
+};
 
 export async function GET(request: NextRequest) {
   try {
@@ -45,7 +64,7 @@ export async function GET(request: NextRequest) {
       }
 
       const headers = ["Name", "Email", "Phone", "Ticket", "Status", "Payment", "Checked In", "Registered At"];
-      const rows = registrations.map((r: any) => [
+      const rows = (registrations as unknown as CsvReg[]).map((r) => [
         r.attendee_name,
         r.attendee_email,
         r.attendee_phone ?? "",
@@ -82,7 +101,7 @@ export async function GET(request: NextRequest) {
 
     let total = 0, confirmed = 0, waitlisted = 0, cancelled = 0, checkedIn = 0, revenue = 0;
 
-    for (const r of registrations as any[]) {
+    for (const r of registrations as unknown as AnalyticsReg[]) {
       total++;
       if (r.status === "confirmed") confirmed++;
       if (r.status === "waitlisted") waitlisted++;
