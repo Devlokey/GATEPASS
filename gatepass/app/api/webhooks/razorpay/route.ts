@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+type EventInfo = { title: string; slug: string; venue: string | null; start_date: string | null };
+type TicketInfo = { name: string } | null;
 import { createClient } from "@/lib/supabase/server";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { sendConfirmationEmail } from "@/lib/resend";
@@ -65,15 +68,15 @@ export async function POST(request: NextRequest) {
     });
 
     // Send confirmation email
-    const ev = (registration as any).events;
+    const ev = (registration.events as unknown as EventInfo | null);
     try {
       await sendConfirmationEmail({
         to: registration.attendee_email,
         attendeeName: registration.attendee_name,
         eventTitle: ev?.title ?? "Your Event",
-        eventDate: formatDate(ev?.start_date),
+        eventDate: formatDate(ev?.start_date ?? null),
         eventVenue: ev?.venue ?? "Venue TBD",
-        ticketType: (registration as any).ticket_types?.name ?? "General",
+        ticketType: (registration.ticket_types as unknown as TicketInfo)?.name ?? "General",
         qrCode: registration.qr_code,
         eventSlug: ev?.slug ?? "",
       });

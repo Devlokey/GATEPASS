@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         already_checked_in: true,
         message: `Already checked in at ${new Date(existing.checked_in_at).toLocaleTimeString("en-IN")}`,
         attendee_name: registration.attendee_name,
-        ticket_type: (registration as any).ticket_types?.name,
+        ticket_type: (registration.ticket_types as unknown as { name: string } | null)?.name,
       });
     }
 
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Check-in successful!",
       attendee_name: registration.attendee_name,
-      ticket_type: (registration as any).ticket_types?.name,
+      ticket_type: (registration.ticket_types as unknown as { name: string } | null)?.name,
     });
   } catch (err) {
     console.error("Checkin API error:", err);
