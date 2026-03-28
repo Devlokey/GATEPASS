@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gatepass — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --o:#FF4D00;--ol:#FF6B2B;--dk:#090909;--d2:#0f0f0f;--d3:#161616;--d4:#1e1e1e;
+  --w:#F5F0EB;--g:#666560;--g2:#333330;
+  --br:rgba(255,255,255,0.06);--br2:rgba(255,255,255,0.1);
+  --green:#4ade80;--red:#f87171;--yellow:#fbbf24;--blue:#60a5fa;
+  --fd:'Bebas Neue',sans-serif;--fb:'Syne',sans-serif;--ft:'DM Sans',sans-serif;
+  --sidebar:220px;
+}
+html,body{height:100%;background:var(--dk);color:var(--w);font-family:var(--ft);overflow:hidden}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;background:var(--d2);
+  border-right:1px solid var(--br);display:flex;flex-direction:column;
+  height:100vh;overflow-y:auto;overflow-x:hidden;
+}
+.sidebar::-webkit-scrollbar{width:0}
+.sb-logo{padding:18px 14px 14px;border-bottom:1px solid var(--br);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sb-mark{width:26px;height:26px;background:var(--o);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;color:#000;flex-shrink:0}
+.sb-logo-txt{font-family:var(--fd);font-size:17px;letter-spacing:2px;color:var(--w)}
+.sb-logo-txt span{color:var(--o)}
+.sb-srch{padding:10px 10px 6px}
+.sb-srch input{width:100%;background:var(--d3);border:1px solid var(--br);border-radius:7px;padding:7px 10px;color:var(--w);font-family:var(--ft);font-size:12px;outline:none;transition:border-color .2s}
+.sb-srch input::placeholder{color:var(--g)}
+.sb-srch input:focus{border-color:var(--o)}
+.sb-sec{padding:10px 8px 4px;flex-shrink:0}
+.sb-lbl{font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);padding:0 8px;margin-bottom:4px;display:block}
+.sb-a{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;text-decoration:none;color:var(--g);font-family:var(--fb);font-size:12px;font-weight:600;transition:all .2s;margin-bottom:1px;cursor:pointer;position:relative;border:none;background:none;width:100%;text-align:left}
+.sb-a:hover{color:var(--w);background:rgba(255,255,255,.04)}
+.sb-a.on{color:var(--w);background:rgba(255,77,0,.1)}
+.sb-a.on::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:55%;background:var(--o);border-radius:0 2px 2px 0}
+.sb-ico{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.sb-bdg{margin-left:auto;background:var(--o);color:#000;font-size:9px;font-weight:700;padding:2px 6px;border-radius:100px;font-family:var(--fb)}
+.sb-dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sb-div{height:1px;background:var(--br);margin:8px 10px}
+.sb-bot{margin-top:auto;padding:10px 8px;border-top:1px solid var(--br);flex-shrink:0}
+.sb-usr{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;transition:background .2s}
+.sb-usr:hover{background:rgba(255,255,255,.04)}
+.sb-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--o),#a33000);display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:10px;font-weight:700;color:#000}
+.sb-un{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w)}
+.sb-ur{font-size:10px;color:var(--g)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 22px;height:50px;flex-shrink:0;border-bottom:1px solid var(--br);background:var(--d2);gap:14px}
+.tb-l{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.tb-srch{display:flex;align-items:center;gap:7px;background:var(--d3);border:1px solid var(--br);border-radius:7px;padding:5px 10px;flex:1;max-width:300px}
+.tb-srch input{background:none;border:none;outline:none;color:var(--w);font-family:var(--ft);font-size:12px;width:100%}
+.tb-srch input::placeholder{color:var(--g)}
+.tb-ico{font-size:11px;color:var(--g);flex-shrink:0}
+.tb-r{display:flex;align-items:center;gap:7px}
+.tbtn{display:flex;align-items:center;gap:5px;background:none;border:1px solid var(--br2);color:var(--g);padding:5px 11px;border-radius:7px;font-family:var(--fb);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tbtn:hover{border-color:rgba(255,255,255,.2);color:var(--w)}
+.tbtn-p{background:var(--o);border-color:var(--o);color:#000}
+.tbtn-p:hover{background:var(--ol);border-color:var(--ol);color:#000}
+.tbtn-notif{position:relative;width:30px;height:30px;border-radius:7px;border:1px solid var(--br);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--g);transition:all .2s}
+.tbtn-notif:hover{border-color:var(--br2);color:var(--w)}
+.notif-pip{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--o);border:1px solid var(--d2)}
+.mob-tog{display:none;background:none;border:none;color:var(--w);font-size:16px;cursor:pointer;padding:4px}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:18px 22px;background:var(--dk)}
+.content::-webkit-scrollbar{width:3px}
+.content::-webkit-scrollbar-thumb{background:var(--g2);border-radius:2px}
+
+/* SUMMARY GRID */
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.sc{background:var(--d3);border:1px solid var(--br);border-radius:10px;padding:14px;position:relative;overflow:hidden;transition:border-color .25s,transform .25s;cursor:default}
+.sc:hover{border-color:var(--br2);transform:translateY(-2px)}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--cc,var(--g2));opacity:.7}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.sc-ico{width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:13px}
+.sc-d{font-family:var(--fb);font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px}
+.dup{background:rgba(74,222,128,.1);color:var(--green)}
+.ddn{background:rgba(248,113,113,.1);color:var(--red)}
+.dne{background:rgba(255,255,255,.05);color:var(--g)}
+.sc-v{font-family:var(--fd);font-size:34px;line-height:1;color:var(--w);margin-bottom:3px}
+.sc-l{font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g)}
+
+/* QUICK ACTIONS */
+.qa{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.qabtn{display:flex;align-items:center;gap:6px;background:var(--d3);border:1px solid var(--br);color:var(--g);padding:7px 13px;border-radius:7px;font-family:var(--fb);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.qabtn:hover{border-color:rgba(255,77,0,.4);color:var(--w);background:rgba(255,77,0,.06)}
+.qabtn.qap{background:var(--o);border-color:var(--o);color:#000}
+.qabtn.qap:hover{background:var(--ol);border-color:var(--ol)}
+
+/* SECTION CARD */
+.card{background:var(--d3);border:1px solid var(--br);border-radius:10px;overflow:hidden;margin-bottom:18px}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--br);background:var(--d2)}
+.ct{font-family:var(--fd);font-size:14px;letter-spacing:1.5px;color:var(--w)}
+.cact{display:flex;align-items:center;gap:8px}
+.clink{font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--o);text-decoration:none;transition:opacity .2s;background:none;border:none;cursor:pointer}
+.clink:hover{opacity:.7}
+
+/* FILTER BAR */
+.fbar{display:flex;align-items:center;gap:7px;padding:8px 16px;border-bottom:1px solid var(--br);flex-wrap:wrap}
+.fsel{background:var(--d4);border:1px solid var(--br);border-radius:6px;color:var(--g);font-family:var(--fb);font-size:10px;font-weight:600;padding:4px 8px;outline:none;cursor:pointer;transition:border-color .2s}
+.fsel:focus{border-color:var(--o);color:var(--w)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);text-align:left;padding:9px 16px;border-bottom:1px solid var(--br);background:var(--d2)}
+.tbl td{padding:11px 16px;border-bottom:1px solid var(--br);font-size:12px;color:var(--w);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.015)}
+.tid{font-family:var(--fb);font-size:10px;font-weight:700;color:var(--g)}
+.tname{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w)}
+.tsub{font-size:10px;color:var(--g);margin-top:1px}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.bdg::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+.b-p{background:rgba(251,191,36,.1);color:var(--yellow)}
+.b-a{background:rgba(74,222,128,.1);color:var(--green)}
+.b-r{background:rgba(248,113,113,.1);color:var(--red)}
+.b-i{background:rgba(74,222,128,.12);color:var(--green);animation:pulse 2s ease-in-out infinite}
+.b-o{background:rgba(255,255,255,.05);color:var(--g)}
+.b-e{background:rgba(248,113,113,.08);color:var(--red)}
+
+/* ACTION BUTTONS */
+.abtn{padding:3px 9px;border-radius:5px;border:1px solid var(--br);background:none;color:var(--g);font-family:var(--fb);font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.abtn:hover{border-color:var(--br2);color:var(--w)}
+.abtn.ok:hover{border-color:rgba(74,222,128,.4);color:var(--green);background:rgba(74,222,128,.06)}
+.abtn.no:hover{border-color:rgba(248,113,113,.4);color:var(--red);background:rgba(248,113,113,.06)}
+.abtn.see:hover{border-color:rgba(96,165,250,.4);color:var(--blue);background:rgba(96,165,250,.06)}
+.ibtn{width:24px;height:24px;border-radius:5px;border:1px solid var(--br);background:none;color:var(--g);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s}
+.ibtn:hover{border-color:var(--br2);color:var(--w)}
+.acts{display:flex;align-items:center;gap:4px}
+
+/* LIVE DOT */
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.5s ease-in-out infinite;margin-right:5px}
+
+/* MID GRID */
+.mid{display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:18px}
+
+/* NOTIFICATIONS */
+.nlist{max-height:300px;overflow-y:auto}
+.nlist::-webkit-scrollbar{width:0}
+.ni{display:flex;align-items:flex-start;gap:9px;padding:11px 16px;border-bottom:1px solid var(--br);transition:background .2s;cursor:default}
+.ni:last-child{border-bottom:none}
+.ni:hover{background:rgba(255,255,255,.015)}
+.ni.unr{background:rgba(255,77,0,.025)}
+.niw{width:26px;height:26px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px}
+.no{background:rgba(255,77,0,.12)}.ng{background:rgba(74,222,128,.1)}.ny{background:rgba(251,191,36,.1)}.nr{background:rgba(248,113,113,.1)}
+.nb{flex:1;min-width:0}
+.nt{font-size:12px;color:var(--w);line-height:1.4;margin-bottom:2px}
+.nt b{font-weight:600}
+.ntm{font-family:var(--fb);font-size:10px;color:var(--g)}
+.nudot{width:6px;height:6px;border-radius:50%;background:var(--o);flex-shrink:0;margin-top:3px}
+
+/* BOTTOM GRID */
+.bot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
+
+/* BAR CHART */
+.barchart{display:flex;align-items:flex-end;gap:5px;height:72px;padding:0 16px 12px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bfill{width:100%;border-radius:3px 3px 0 0;background:linear-gradient(to top,var(--o),var(--ol));min-height:3px;transition:height .7s cubic-bezier(.16,1,.3,1)}
+.bfill.dim{background:var(--d4)}
+.bday{font-family:var(--fb);font-size:9px;color:var(--g);font-weight:600}
+
+/* DONUT */
+.drow{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.dleg{display:flex;flex-direction:column;gap:8px;flex:1}
+.dli{display:flex;align-items:center;gap:6px}
+.dld{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dll{font-family:var(--fb);font-size:11px;font-weight:600;color:var(--g);flex:1}
+.dlv{font-family:var(--fd);font-size:15px;color:var(--w)}
+
+/* APPROVAL QUEUE */
+.qi{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--br);transition:background .2s}
+.qi:last-child{border-bottom:none}
+.qi:hover{background:rgba(255,255,255,.015)}
+.qav{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:var(--d4);border:1px solid var(--br);display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:10px;font-weight:700;color:var(--g)}
+.qin{flex:1;min-width:0}
+.qn{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qm{font-size:10px;color:var(--g)}
+.qact{display:flex;gap:4px;flex-shrink:0}
+
+/* MOBILE */
+.mob-ov{display:none;position:fixed;inset:0;z-index:190;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
+.mob-ov.show{display:block}
+
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 40px;gap:20px;min-height:60vh;
+}
+.empty-state.show{display:flex}
+.es-orb{
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(255,77,0,.08);border:1px solid rgba(255,77,0,.15);
+  display:flex;align-items:center;justify-content:center;font-size:32px;
+  margin-bottom:4px;
+  animation:esFloat 4s ease-in-out infinite;
+}
+@keyframes esFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.es-title{font-family:var(--fd);font-size:clamp(32px,5vw,52px);letter-spacing:2px;color:var(--w);line-height:.95}
+.es-sub{font-size:14px;color:var(--g);line-height:1.7;max-width:360px}
+.es-steps{
+  display:flex;gap:12px;margin:8px 0;flex-wrap:wrap;justify-content:center;
+}
+.es-step{
+  background:var(--d3);border:1px solid var(--br);border-radius:10px;
+  padding:14px 18px;text-align:left;min-width:140px;flex:1;max-width:180px;
+  transition:border-color .2s;
+}
+.es-step:hover{border-color:var(--br2)}
+.es-step-n{
+  font-family:var(--fd);font-size:11px;color:var(--o);letter-spacing:1px;
+  margin-bottom:6px;
+}
+.es-step-t{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w);margin-bottom:3px}
+.es-step-s{font-size:11px;color:var(--g)}
+.es-cta{
+  display:flex;align-items:center;gap:8px;
+  background:var(--o);color:#000;border:none;
+  padding:13px 28px;border-radius:9px;
+  font-family:var(--fb);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);
+  text-decoration:none;
+}
+.es-cta:hover{background:var(--ol);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,77,0,.25)}
+.es-ghost{
+  font-family:var(--fb);font-size:12px;font-weight:600;color:var(--g);
+  background:none;border:1px solid var(--br2);padding:10px 20px;
+  border-radius:8px;cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.es-ghost:hover{border-color:rgba(255,255,255,.2);color:var(--w)}
+
+/* Full content area state */
+#full-dash{display:none}
+#full-dash.show{display:block}
+@media(max-width:900px){
+  .sidebar{position:fixed;left:-100%;top:0;bottom:0;z-index:200;transition:left .35s cubic-bezier(.16,1,.3,1)}
+  .sidebar.open{left:0}
+  .mob-tog{display:flex}
+  .sum-grid{grid-template-columns:repeat(2,1fr)}
+  .mid{grid-template-columns:1fr}
+  .bot{grid-template-columns:1fr 1fr}
+  .tbl th:nth-child(4),.tbl td:nth-child(4),.tbl th:nth-child(5),.tbl td:nth-child(5){display:none}
+}
+@media(max-width:600px){
+  .sum-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .sc-v{font-size:26px}
+  .qa{gap:5px}
+  .qabtn{padding:6px 10px;font-size:10px}
+  .content{padding:14px}
+  .topbar{padding:0 14px}
+  .bot{grid-template-columns:1fr}
+  .tbl th:nth-child(3),.tbl td:nth-child(3){display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-ov" id="ov" onclick="closeS()"></div>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sb">
+  <div class="sb-logo">
+    <div class="sb-mark">GP</div>
+    <a href="gatepass.html" style="text-decoration:none"><div class="sb-logo-txt">GATE<span>PASS</span></div></a>
+  </div>
+  <div class="sb-srch"><input placeholder="Search anything..." type="text"/></div>
+  <div class="sb-sec">
+    <span class="sb-lbl">Overview</span>
+    <button class="sb-a on" onclick="nav(this)"><span class="sb-ico">⌂</span>Dashboard</button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">◈</span>Pass Requests<span class="sb-bdg">12</span></button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">◎</span>Visitor Management</button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">✓</span>Approvals<span class="sb-bdg">5</span></button>
+  </div>
+  <div class="sb-sec">
+    <span class="sb-lbl">Operations</span>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">⬡</span>Check-in / Out<span class="sb-dot"></span></button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">◻</span>Departments</button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">◷</span>Employees</button>
+  </div>
+  <div class="sb-sec">
+    <span class="sb-lbl">Insights</span>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">▦</span>Reports & Analytics</button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">◌</span>Notifications<span class="sb-bdg">3</span></button>
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">⬛</span>Security & Access</button>
+  </div>
+  <div class="sb-div"></div>
+  <div class="sb-sec">
+    <button class="sb-a" onclick="nav(this)"><span class="sb-ico">⚙</span>Settings</button>
+    <a class="sb-a" href="event.html" target="_blank"><span class="sb-ico">↗</span>View live site</a>
+  </div>
+  <div class="sb-bot">
+    <div class="sb-usr" onclick="window.location.href='auth.html'" title="Sign out">
+      <div class="sb-av">AM</div>
+      <div><div class="sb-un">Amal Mathew</div><div class="sb-ur">Admin · NIT Calicut</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-l">
+      <button class="mob-tog" onclick="openS()">☰</button>
+      <div class="tb-srch">
+        <span class="tb-ico">⌕</span>
+        <input placeholder="Search visitor / pass ID / host..." type="text"/>
+      </div>
+    </div>
+    <div class="tb-r">
+      <button class="tbtn" onclick="toast('Exporting CSV...')">📤 Export</button>
+      <button class="tbtn" onclick="toast('Schedule visit coming soon')">📅 Schedule</button>
+      <button class="tbtn-notif" onclick="toast('3 new notifications')">🔔<div class="notif-pip"></div></button>
+      <button class="tbtn tbtn-p" onclick="toast('Create new pass')">➕ New Pass</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+
+      <!-- EMPTY STATE (shown when user has no events) -->
+      <div class="empty-state" id="emptyState">
+        <div class="es-orb">🎪</div>
+        <div class="es-title">YOUR DASHBOARD<br>AWAITS.</div>
+        <p class="es-sub">You haven't created any events yet. Get your first event live in under 5 minutes — zero platform fees, forever.</p>
+        <div class="es-steps">
+          <div class="es-step">
+            <div class="es-step-n">#01</div>
+            <div class="es-step-t">Create event</div>
+            <div class="es-step-s">Name, date, location</div>
+          </div>
+          <div class="es-step">
+            <div class="es-step-n">#02</div>
+            <div class="es-step-t">Set up tickets</div>
+            <div class="es-step-s">Free or paid, your choice</div>
+          </div>
+          <div class="es-step">
+            <div class="es-step-n">#03</div>
+            <div class="es-step-t">Share & collect</div>
+            <div class="es-step-s">Get registrations instantly</div>
+          </div>
+        </div>
+        <a href="auth.html#onboard" class="es-cta" onclick="startOnboard()">+ Create your first event</a>
+        <a href="event.html" class="es-ghost">Preview a sample event →</a>
+      </div>
+
+      <!-- FULL DASHBOARD (shown when user has events) -->
+      <div id="full-dash">
+    <!-- ① SUMMARY CARDS -->
+    <div class="sum-grid">
+      <div class="sc" style="--cc:var(--o)">
+        <div class="sc-top"><div class="sc-ico">📋</div><span class="sc-d dup">↑ 8%</span></div>
+        <div class="sc-v">1,284</div><div class="sc-l">Total Pass Requests</div>
+      </div>
+      <div class="sc" style="--cc:var(--yellow)">
+        <div class="sc-top"><div class="sc-ico">⏳</div><span class="sc-d dne">+5 today</span></div>
+        <div class="sc-v">12</div><div class="sc-l">Pending Approvals</div>
+      </div>
+      <div class="sc" style="--cc:var(--green)">
+        <div class="sc-top"><div class="sc-ico">✅</div><span class="sc-d dup">↑ 14%</span></div>
+        <div class="sc-v">1,104</div><div class="sc-l">Approved Passes</div>
+      </div>
+      <div class="sc" style="--cc:var(--red)">
+        <div class="sc-top"><div class="sc-ico">✕</div><span class="sc-d ddn">↑ 2</span></div>
+        <div class="sc-v">168</div><div class="sc-l">Rejected Passes</div>
+      </div>
+      <div class="sc" style="--cc:var(--blue)">
+        <div class="sc-top"><div class="sc-ico">🏢</div><span class="sc-d dne">Live</span></div>
+        <div class="sc-v">47</div><div class="sc-l">Visitors Inside</div>
+      </div>
+      <div class="sc" style="--cc:var(--ol)">
+        <div class="sc-top"><div class="sc-ico">📅</div><span class="sc-d dup">↑ 22%</span></div>
+        <div class="sc-v">86</div><div class="sc-l">Today's Visitors</div>
+      </div>
+      <div class="sc" style="--cc:var(--g)">
+        <div class="sc-top"><div class="sc-ico">⌛</div><span class="sc-d ddn">+3 new</span></div>
+        <div class="sc-v">23</div><div class="sc-l">Expired Passes</div>
+      </div>
+      <div class="sc" style="--cc:var(--green)">
+        <div class="sc-top"><div class="sc-ico">₹</div><span class="sc-d dne" style="color:var(--o)">Saved</span></div>
+        <div class="sc-v">₹0</div><div class="sc-l">Platform Fees Paid</div>
+      </div>
+    </div>
+
+    <!-- ② QUICK ACTIONS -->
+    <div class="qa">
+      <button class="qabtn qap" onclick="toast('Create pass opened!')">➕ Create New Pass</button>
+      <button class="qabtn" onclick="toast('Visitor pass generator')">🧾 Visitor Pass</button>
+      <button class="qabtn" onclick="toast('Add visitor')">🏢 Add Visitor</button>
+      <button class="qabtn" onclick="toast('Schedule visit')">📅 Schedule Visit</button>
+      <button class="qabtn" onclick="toast('Bulk upload')">📄 Bulk Upload</button>
+      <button class="qabtn" onclick="toast('Exporting...')">📤 Export Report</button>
+    </div>
+
+    <!-- ③ RECENT PASS REQUESTS -->
+    <div class="card">
+      <div class="ch">
+        <span class="ct">RECENT PASS REQUESTS</span>
+        <div class="cact">
+          <select class="fsel"><option>All Status</option><option>Pending</option><option>Approved</option><option>Rejected</option></select>
+          <select class="fsel"><option>All Dept</option><option>IT</option><option>HR</option><option>Admin</option></select>
+          <button class="clink" onclick="toast('View all requests')">View all →</button>
+        </div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>Request ID</th><th>Visitor</th><th>Company / Dept</th><th>Host</th><th>Visit Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tid">#GP-2601</span></td><td><div class="tname">Rahul Kumar</div><div class="tsub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5b293a332e371b3e233a362b373e75383436">[email&#160;protected]</a></div></td><td>Infosys · IT Dept</td><td>Dr. Priya Menon</td><td>26 Mar, 10:00 AM</td><td><span class="bdg b-p">Pending</span></td><td><div class="acts"><button class="abtn ok" onclick="toast('Pass #GP-2601 approved!')">Approve</button><button class="abtn no">Reject</button><button class="abtn see">View</button></div></td></tr>
+          <tr><td><span class="tid">#GP-2600</span></td><td><div class="tname">Ananya Singh</div><div class="tsub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="40212e212e392100333421323435306e292e">[email&#160;protected]</a></div></td><td>KSUM · Admin</td><td>Amal Mathew</td><td>26 Mar, 11:30 AM</td><td><span class="bdg b-a">Approved</span></td><td><div class="acts"><button class="abtn see">View</button><button class="ibtn">✏</button></div></td></tr>
+          <tr><td><span class="tid">#GP-2599</span></td><td><div class="tname">Mohammed Farhan</div><div class="tsub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6006011208010e20090914024e01034e090e">[email&#160;protected]</a></div></td><td>IIT Bombay · Research</td><td>Prof. Suresh R.</td><td>26 Mar, 2:00 PM</td><td><span class="bdg b-p">Pending</span></td><td><div class="acts"><button class="abtn ok" onclick="toast('Approved!')">Approve</button><button class="abtn no">Reject</button><button class="abtn see">View</button></div></td></tr>
+          <tr><td><span class="tid">#GP-2598</span></td><td><div class="tname">Sruthi Nambiar</div><div class="tsub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="22515057564a4b624647514b454c0c414d">[email&#160;protected]</a></div></td><td>Freelance · Design</td><td>Eric Victor</td><td>25 Mar, 4:30 PM</td><td><span class="bdg b-a">Approved</span></td><td><div class="acts"><button class="abtn see">View</button><button class="ibtn">✏</button></div></td></tr>
+          <tr><td><span class="tid">#GP-2597</span></td><td><div class="tname">Vivek Sharma</div><div class="tsub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e99f809f8c82a98a869b99c78a8684">[email&#160;protected]</a></div></td><td>TCS · Security</td><td>Abhishek Mohan</td><td>25 Mar, 9:00 AM</td><td><span class="bdg b-r">Rejected</span></td><td><div class="acts"><button class="abtn see">View</button></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MIDDLE: ④ LIVE ACTIVITY + ⑥ NOTIFICATIONS -->
+    <div class="mid">
+      <div class="card" style="margin-bottom:0">
+        <div class="ch">
+          <span class="ct"><span class="ldot"></span>VISITOR ACTIVITY</span>
+          <button class="clink" onclick="toast('Live monitor')">Full view →</button>
+        </div>
+        <table class="tbl">
+          <thead><tr><th>Visitor</th><th>Pass ID</th><th>Check-in</th><th>Host</th><th>Gate</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><div class="tname">Ananya Singh</div></td><td><span class="tid">#GP-2600</span></td><td>10:14 AM</td><td>Amal Mathew</td><td>Main Gate</td><td><span class="bdg b-i">Inside</span></td></tr>
+            <tr><td><div class="tname">Rohit Nair</div></td><td><span class="tid">#GP-2594</span></td><td>9:45 AM</td><td>Eric Victor</td><td>Gate B</td><td><span class="bdg b-i">Inside</span></td></tr>
+            <tr><td><div class="tname">Kavitha Pillai</div></td><td><span class="tid">#GP-2590</span></td><td>9:10 AM</td><td>Prof. Suresh R.</td><td>Main Gate</td><td><span class="bdg b-o">Checked Out</span></td></tr>
+            <tr><td><div class="tname">Sruthi Nambiar</div></td><td><span class="tid">#GP-2598</span></td><td>11:00 AM</td><td>Eric Victor</td><td>Gate C</td><td><span class="bdg b-i">Inside</span></td></tr>
+            <tr><td><div class="tname">Deepak Menon</div></td><td><span class="tid">#GP-2585</span></td><td>8:50 AM</td><td>Abhishek Mohan</td><td>Main Gate</td><td><span class="bdg b-e">Expired</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <div class="ch">
+          <span class="ct">NOTIFICATIONS</span>
+          <button class="clink" onclick="toast('Marked all read')">Mark all read</button>
+        </div>
+        <div class="nlist">
+          <div class="ni unr"><div class="niw no">🔔</div><div class="nb"><div class="nt"><b>New pass request</b> from Rahul Kumar · IT Dept</div><div class="ntm">2 minutes ago</div></div><div class="nudot"></div></div>
+          <div class="ni unr"><div class="niw ny">⏰</div><div class="nb"><div class="nt">Pass <b>#GP-2585</b> expiring in 30 minutes</div><div class="ntm">8 minutes ago</div></div><div class="nudot"></div></div>
+          <div class="ni unr"><div class="niw ng">✅</div><div class="nb"><div class="nt"><b>Ananya Singh</b> checked in at Main Gate</div><div class="ntm">14 minutes ago</div></div><div class="nudot"></div></div>
+          <div class="ni"><div class="niw no">⚡</div><div class="nb"><div class="nt">Approval required for <b>Mohammed Farhan</b></div><div class="ntm">22 minutes ago</div></div></div>
+          <div class="ni"><div class="niw ng">🔑</div><div class="nb"><div class="nt"><b>Sruthi Nambiar</b> checked in at Gate C</div><div class="ntm">1 hour ago</div></div></div>
+          <div class="ni"><div class="niw nr">✕</div><div class="nb"><div class="nt">Pass for <b>Vivek Sharma</b> rejected by security</div><div class="ntm">2 hours ago</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM: ⑤ CHARTS + ⑦ APPROVAL QUEUE -->
+    <div class="bot">
+
+      <!-- Daily visitors bar chart -->
+      <div class="card" style="margin-bottom:0">
+        <div class="ch"><span class="ct">DAILY VISITORS</span></div>
+        <div style="padding:10px 16px 4px"><span style="font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g)">This week</span></div>
+        <div class="barchart">
+          <div class="bcol"><div class="bfill dim" style="height:45%"></div><div class="bday">M</div></div>
+          <div class="bcol"><div class="bfill" style="height:68%"></div><div class="bday">T</div></div>
+          <div class="bcol"><div class="bfill dim" style="height:55%"></div><div class="bday">W</div></div>
+          <div class="bcol"><div class="bfill" style="height:82%"></div><div class="bday">T</div></div>
+          <div class="bcol"><div class="bfill dim" style="height:40%"></div><div class="bday">F</div></div>
+          <div class="bcol"><div class="bfill dim" style="height:20%"></div><div class="bday">S</div></div>
+          <div class="bcol"><div class="bfill" style="height:100%"></div><div class="bday" style="color:var(--o)">T</div></div>
+        </div>
+      </div>
+
+      <!-- Pass breakdown donut -->
+      <div class="card" style="margin-bottom:0">
+        <div class="ch"><span class="ct">PASS BREAKDOWN</span></div>
+        <div class="drow">
+          <svg width="96" height="96" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="36" fill="none" stroke="#1e1e1e" stroke-width="11"/>
+            <circle cx="48" cy="48" r="36" fill="none" stroke="#FF4D00" stroke-width="11" stroke-dasharray="142 226" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 48 48)"/>
+            <circle cx="48" cy="48" r="36" fill="none" stroke="#4ade80" stroke-width="11" stroke-dasharray="57 226" stroke-dashoffset="-142" stroke-linecap="round" transform="rotate(-90 48 48)"/>
+            <circle cx="48" cy="48" r="36" fill="none" stroke="#f87171" stroke-width="11" stroke-dasharray="27 226" stroke-dashoffset="-199" stroke-linecap="round" transform="rotate(-90 48 48)"/>
+            <text x="48" y="44" text-anchor="middle" font-family="'Bebas Neue'" font-size="17" fill="#F5F0EB">86</text>
+            <text x="48" y="55" text-anchor="middle" font-family="'Syne'" font-size="7" fill="#666560" font-weight="700">TODAY</text>
+          </svg>
+          <div class="dleg">
+            <div class="dli"><div class="dld" style="background:var(--o)"></div><span class="dll">Pending</span><span class="dlv">12</span></div>
+            <div class="dli"><div class="dld" style="background:var(--green)"></div><span class="dll">Approved</span><span class="dlv">54</span></div>
+            <div class="dli"><div class="dld" style="background:var(--red)"></div><span class="dll">Rejected</span><span class="dlv">20</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval queue -->
+      <div class="card" style="margin-bottom:0">
+        <div class="ch"><span class="ct">APPROVAL QUEUE</span><span class="bdg b-p" style="animation:none">5 waiting</span></div>
+        <div>
+          <div class="qi"><div class="qav">RK</div><div class="qin"><div class="qn">Rahul Kumar</div><div class="qm">IT Dept · 26 Mar 10:00</div></div><div class="qact"><button class="abtn ok" onclick="toast('Approved!')">✓</button><button class="abtn no">✕</button></div></div>
+          <div class="qi"><div class="qav">MF</div><div class="qin"><div class="qn">Mohammed Farhan</div><div class="qm">Research · 26 Mar 2:00</div></div><div class="qact"><button class="abtn ok" onclick="toast('Approved!')">✓</button><button class="abtn no">✕</button></div></div>
+          <div class="qi"><div class="qav">NK</div><div class="qin"><div class="qn">Nisha Krishnan</div><div class="qm">HR · 26 Mar 3:30</div></div><div class="qact"><button class="abtn ok" onclick="toast('Approved!')">✓</button><button class="abtn no">✕</button></div></div>
+          <div class="qi"><div class="qav">ST</div><div class="qin"><div class="qn">Sanjay Tiwari</div><div class="qm">Finance · 27 Mar 9:00</div></div><div class="qact"><button class="abtn ok" onclick="toast('Approved!')">✓</button><button class="abtn no">✕</button></div></div>
+          <div class="qi"><div class="qav">PV</div><div class="qin"><div class="qn">Priya Varma</div><div class="qm">Admin · 27 Mar 11:00</div></div><div class="qact"><button class="abtn ok" onclick="toast('Approved!')">✓</button><button class="abtn no">✕</button></div></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- Toast -->
+<div id="tk" style="position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--d3);border:1px solid var(--br2);border-radius:9px;padding:11px 16px;font-family:var(--fb);font-size:12px;font-weight:600;color:var(--w);display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);pointer-events:none;min-width:180px">
+  <span style="color:var(--o)">●</span><span id="tkm">Done</span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── ROUTING: Check user state on load ──
+function initDashboard(){
+  const hasEvents = localStorage.getItem('gp_has_events');
+  const userState = localStorage.getItem('gp_user_state');
+  const userEmail = localStorage.getItem('gp_user_email') || '';
+
+  // Set user name in sidebar from email
+  if(userEmail){
+    const nameEl = document.querySelector('.sb-un');
+    if(nameEl) nameEl.textContent = userEmail.split('@')[0];
+  }
+
+  if(hasEvents === 'true'){
+    // Returning user with events — show full dashboard
+    document.getElementById('emptyState').classList.remove('show');
+    document.getElementById('full-dash').classList.add('show');
+    // Animate bars
+    setTimeout(()=>{
+      document.querySelectorAll('.bfill').forEach(b=>{
+        const h=b.style.height;b.style.height='0';
+        setTimeout(()=>b.style.height=h,100);
+      });
+    },200);
+  } else {
+    // New user or no events — show empty state
+    document.getElementById('emptyState').classList.add('show');
+    document.getElementById('full-dash').classList.remove('show');
+  }
+}
+
+function startOnboard(){
+  // Clear state so auth shows onboarding
+  localStorage.removeItem('gp_has_events');
+  localStorage.setItem('gp_user_state','new');
+}
+
+// Demo toggle for testing (press D to toggle between states)
+document.addEventListener('keydown', e => {
+  if(e.key === 'd' || e.key === 'D'){
+    const hasEvents = localStorage.getItem('gp_has_events');
+    if(hasEvents){
+      localStorage.removeItem('gp_has_events');
+      toast('Switched to: Empty state (new user)');
+    } else {
+      localStorage.setItem('gp_has_events','true');
+      toast('Switched to: Full dashboard (returning user)');
+    }
+    setTimeout(()=>location.reload(), 800);
+  }
+});
+
+function openS(){document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');document.body.style.overflow='hidden'}
+function closeS(){document.getElementById('sb').classList.remove('open');docum

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gatepass — Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --o:#FF4D00;--ol:#FF6B2B;--dk:#090909;--d2:#0f0f0f;--d3:#161616;--d4:#1e1e1e;
+  --w:#F5F0EB;--g:#666560;--g2:#333330;
+  --br:rgba(255,255,255,0.06);--br2:rgba(255,255,255,0.12);
+  --green:#4ade80;--red:#f87171;
+  --fd:'Bebas Neue',sans-serif;--fb:'Syne',sans-serif;--ft:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dk);color:var(--w);font-family:var(--ft);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:-50%;width:200%;height:200%;z-index:0;opacity:.04;pointer-events:none;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+background-size:200px;animation:grain 8s steps(10) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(3%,1%)}40%{transform:translate(2%,-2%)}60%{transform:translate(1%,-1%)}80%{transform:translate(3%,-3%)}100%{transform:translate(0,0)}}
+
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 52px;background:rgba(9,9,9,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--br)}
+.nlogo{font-family:var(--fd);font-size:20px;letter-spacing:3px;text-decoration:none;color:var(--w)}
+.nlogo span{color:var(--o)}
+.nbk{display:flex;align-items:center;gap:7px;color:var(--g);font-family:var(--fb);font-size:12px;font-weight:600;text-decoration:none;transition:color .2s}
+.nbk:hover{color:var(--w)}
+
+.page{display:grid;grid-template-columns:1fr 420px;min-height:calc(100vh - 57px);position:relative;z-index:1}
+
+/* LEFT */
+.ep{padding:52px;border-right:1px solid var(--br);display:flex;flex-direction:column;background:linear-gradient(160deg,rgba(139,26,0,.06) 0%,transparent 50%);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
+.ep::-webkit-scrollbar{width:0}
+.ep-tag{font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--o);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ep-tag::before{content:'';display:inline-block;width:20px;height:1px;background:var(--o)}
+.ep-meta{display:flex;flex-direction:column;gap:9px;margin-bottom:28px}
+.ep-row{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--g)}
+.ep-ico{width:26px;height:26px;border-radius:6px;background:var(--d3);border:1px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.ep-v{color:var(--w);font-weight:500}
+.ep-div{height:1px;background:var(--br);margin:24px 0}
+.tk-lbl{font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:10px}
+.tks{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.tkc{border:1px solid var(--br);border-radius:9px;padding:13px 14px;cursor:pointer;transition:all .25s;position:relative;background:var(--d3)}
+.tkc:hover{border-color:var(--br2)}
+.tkc.sel{border-color:var(--o);background:rgba(255,77,0,.05)}
+.tkc.sel::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--o);border-radius:9px 0 0 9px}
+.tkc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.tkc-name{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w)}
+.tkc-price{font-family:var(--fd);font-size:17px;color:var(--o)}
+.tkc-price.free{color:var(--green)}
+.tkc-desc{font-size:11px;color:var(--g);line-height:1.5}
+.tkc-cap{font-size:10px;color:var(--g);margin-top:5px;font-family:var(--fb)}
+.tkc-cap span{color:var(--o)}
+.tkc-chk{position:absolute;top:11px;right:11px;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--br2);display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:all .2s}
+.tkc.sel .tkc-chk{background:var(--o);border-color:var(--o);color:#000}
+.cap-bar{height:3px;background:var(--d4);border-radius:2px;overflow:hidden;margin-top:6px}
+.cap-fill{height:100%;border-radius:2px;background:var(--o);transition:width .5s cubic-bezier(.16,1,.3,1)}
+.os{background:var(--d3);border:1px solid var(--br);border-radius:9px;padding:14px}
+.os-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.os-row:last-child{margin-bottom:0;padding-top:7px;border-top:1px solid var(--br)}
+.os-l{color:var(--g);font-family:var(--fb);font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.os-v{color:var(--w);font-family:var(--fb);font-size:11px;font-weight:700}
+.os-tot{font-family:var(--fd);font-size:22px;color:var(--w)}
+.os-tot-l{font-family:var(--fd);font-size:13px;color:var(--g)}
+
+/* RIGHT */
+.fp{padding:44px 38px;background:var(--d2);overflow-y:auto;height:calc(100vh - 57px)}
+.fp::-webkit-scrollbar{width:3px}
+.fp::-webkit-scrollbar-thumb{background:var(--g2);border-radius:2px}
+.steps{display:flex;align-items:center;gap:0;margin-bottom:32px}
+.stp{display:flex;align-items:center;gap:7px;flex:1}
+.stp-n{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:10px;font-weight:700;border:1.5px solid var(--br2);color:var(--g);transition:all .3s}
+.stp.done .stp-n{background:var(--o);border-color:var(--o);color:#000}
+.stp.active .stp-n{border-color:var(--o);color:var(--o)}
+.stp-l{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--g);transition:color .3s}
+.stp.done .stp-l,.stp.active .stp-l{color:var(--w)}
+.stp-line{height:1px;background:var(--br);flex:1;margin:0 5px;transition:background .3s}
+.stp-line.done{background:var(--o)}
+.ftitle{font-family:var(--fd);font-size:26px;letter-spacing:2px;color:var(--w);margin-bottom:4px}
+.fsub{font-size:13px;color:var(--g);margin-bottom:24px;line-height:1.5}
+.fgrp{margin-bottom:16px}
+.fgrp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.flbl{display:block;font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.req{color:var(--o)}
+.fi{width:100%;background:var(--d3);border:1px solid var(--br);border-radius:8px;padding:10px 13px;color:var(--w);font-family:var(--ft);font-size:13px;outline:none;transition:border-color .25s,background .25s}
+.fi::placeholder{color:var(--g)}
+.fi:focus{border-color:var(--o);background:rgba(255,77,0,.02)}
+.fi:hover:not(:focus){border-color:var(--br2)}
+textarea.fi{resize:vertical;min-height:75px;line-height:1.6}
+select.fi{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%23666560' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.ferr{font-size:11px;color:var(--red);margin-top:4px;font-family:var(--fb);display:none}
+.fgrp.err .ferr{display:block}
+.fgrp.err .fi{border-color:rgba(248,113,113,.5)}
+.fhint{font-size:11px;color:var(--g);margin-top:4px}
+.fdiv{height:1px;background:var(--br);margin:20px 0}
+.fsect{font-family:var(--fd);font-size:15px;letter-spacing:1.5px;color:var(--w);margin-bottom:14px}
+.fcheck{display:flex;align-items:flex-start;gap:9px;cursor:pointer;margin-bottom:10px}
+.fcheck input{width:15px;height:15px;flex-shrink:0;margin-top:2px;accent-color:var(--o);cursor:pointer;border-radius:3px}
+.fcheck-l{font-size:12px;color:var(--g);line-height:1.5}
+.fcheck-l a{color:var(--o);text-decoration:none}
+.fcheck-l a:hover{text-decoration:underline}
+.radio-grp{display:flex;flex-direction:column;gap:6px}
+.ropt{display:flex;align-items:center;gap:9px;padding:9px 12px;border:1px solid var(--br);border-radius:7px;cursor:pointer;transition:all .2s;background:var(--d3)}
+.ropt:hover{border-color:var(--br2)}
+.ropt.pk{border-color:var(--o);background:rgba(255,77,0,.04)}
+.ropt input{accent-color:var(--o);cursor:pointer;flex-shrink:0}
+.ropt-l{font-family:var(--fb);font-size:12px;font-weight:600;color:var(--w)}
+.tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.tag-btn{padding:5px 13px;border-radius:100px;border:1px solid var(--br);background:var(--d3);color:var(--g);font-family:var(--fb);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s}
+.tag-btn:hover{border-color:var(--br2);color:var(--w)}
+.tag-btn.on{background:rgba(255,77,0,.1);border-color:var(--o);color:var(--o)}
+.fsubmit{width:100%;padding:13px;border-radius:9px;background:var(--o);border:none;color:#000;font-family:var(--fb);font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.fsubmit:hover{background:var(--ol);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,77,0,.25)}
+.fsubmit:active{transform:translateY(0)}
+.fsubmit.loading{opacity:.6;pointer-events:none}
+.fsec{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;font-size:11px;color:var(--g);font-family:var(--fb)}
+
+/* SUCCESS */
+.succ{display:none;flex-direction:column;align-items:center;text-align:center;padding:40px 24px;gap:14px}
+.succ.show{display:flex}
+.succ-ico{width:60px;height:60px;border-radius:50%;background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;font-size:26px;animation:pop .5s cubic-bezier(.16,1,.3,1) both}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.succ-title{font-family:var(--fd);font-size:36px;letter-spacing:2px;color:var(--w)}
+.succ-sub{font-size:13px;color:var(--g);line-height:1.7;max-width:280px}
+.succ-id{font-family:var(--fd);font-size:20px;color:var(--o);letter-spacing:3px}
+.succ-btns{display:flex;flex-direction:column;gap:7px;width:100%;margin-top:4px}
+.sbtn{width:100%;padding:11px;border-radius:8px;cursor:pointer;font-family:var(--fb);font-size:12px;font-weight:700;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px}
+.sbtn-p{background:var(--o);border:none;color:#000}
+.sbtn-p:hover{background:var(--ol)}
+.sbtn-g{background:none;border:1px solid var(--br2);color:var(--g)}
+.sbtn-g:hover{border-color:rgba(255,255,255,.2);color:var(--w)}
+
+/* HERO ROW — desktop: title stacked above poster */
+.ep-hero-row{display:flex;flex-direction:column;gap:0}
+.ep-title{font-family:var(--fd);font-size:clamp(36px,4.5vw,60px);line-height:.9;color:var(--w);margin-bottom:20px}
+.ep-meta-mobile{display:none}
+
+/* POSTER — desktop: full width 16:9 banner */
+.ep-poster{margin-bottom:0;flex-shrink:0}
+.ep-poster-inner{
+  width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;
+  border:1px solid var(--br);background:var(--d3);position:relative;
+}
+.ep-poster-placeholder{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;
+}
+.ep-poster-ph-ico{font-size:24px;opacity:.2}
+.ep-poster-ph-txt{
+  font-family:var(--fb);font-size:9px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--g);opacity:.4;
+}
+.ep-poster-inner img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+
+@media(max-width:860px){
+  .page{grid-template-columns:1fr}
+  nav{padding:14px 24px}
+
+  .ep{
+    position:static;height:auto;
+    padding:28px 20px 24px;
+    border-right:none;border-bottom:1px solid var(--br);
+    display:flex;flex-direction:column;gap:0;
+    background:linear-gradient(160deg,rgba(139,26,0,.08) 0%,transparent 50%);
+  }
+
+  .ep-tag{margin-bottom:12px}
+
+  /* HERO ROW: title + meta on left, tall portrait poster on right */
+  .ep-hero-row{
+    display:grid;
+    grid-template-columns:1fr 140px;
+    grid-template-rows:auto 1fr;
+    gap:0 16px;
+    align-items:stretch;
+    margin-bottom:16px;
+  }
+  .ep-title{
+    grid-column:1;grid-row:1;
+    font-size:clamp(32px,9vw,48px);line-height:.88;margin-bottom:14px;
+  }
+  .ep-meta-mobile{
+    grid-column:1;grid-row:2;
+    display:flex;flex-direction:column;gap:9px;
+    align-self:start;
+  }
+  /* Poster: right column, spans both rows — portrait, same height as title+meta */
+  .ep-poster{
+    grid-column:2;grid-row:1/3;
+    display:flex;align-self:stretch;
+  }
+  .ep-poster-inner{
+    width:100%;height:100%;
+    aspect-ratio:unset;
+    min-height:160px;
+    border-radius:10px;
+  }
+
+  /* Hide the original ep-meta outside the hero row on mobile */
+  .ep-meta{display:none}
+
+  .ep-div{margin:16px 0}
+  .tk-lbl{margin-bottom:8px}
+  .os{margin-top:0}
+
+  .fp{height:auto;padding:28px 20px}
+  .fgrp-row{grid-template-columns:1fr}
+}
+
+@media(max-width:480px){
+  nav{padding:12px 16px}
+  .ep,.fp{padding:18px 14px}
+  .ep-hero-row{grid-template-columns:1fr 120px;gap:0 12px}
+  .ep-title{font-size:clamp(26px,9vw,38px);line-height:.88}
+  .ep-poster-inner{border-radius:8px;min-height:140px}
+  .stp-l{display:none}
+  .fgrp-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="gatepass.html" class="nlogo">GATE<span>PASS</span></a>
+  <a href="event.html" class="nbk">← Back to event</a>
+</nav>
+
+<div class="page">
+
+  <!-- LEFT: EVENT INFO + TICKET SELECTOR -->
+  <div class="ep">
+    <div class="ep-tag">Register Now</div>
+
+    <div class="ep-hero-row">
+      <h1 class="ep-title">TATHVA '26<br>NIT CALICUT</h1>
+
+      <!-- Mobile meta sits inside hero row grid col 1 row 2 -->
+      <div class="ep-meta-mobile">
+        <div class="ep-row"><div class="ep-ico">📅</div><span>Apr 18, 2026 &nbsp;<span class="ep-v">9:00 AM – 9:00 PM</span></span></div>
+        <div class="ep-row"><div class="ep-ico">📍</div><span>NIT Calicut &nbsp;<span class="ep-v">Kozhikode, Kerala</span></span></div>
+        <div class="ep-row"><div class="ep-ico">👤</div><span>840 reg. &nbsp;<span class="ep-v">160 left</span></span></div>
+      </div>
+
+      <!-- EVENT POSTER — right column, full height -->
+      <div class="ep-poster">
+        <div class="ep-poster-inner">
+          <div class="ep-poster-placeholder" id="posterPh">
+            <div class="ep-poster-ph-ico">🖼</div>
+            <div class="ep-poster-ph-txt">Poster</div>
+          </div>
+          <img id="posterImg" src="" alt="Event poster" style="display:none;width:100%;height:100%;object-fit:cover"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="ep-meta">
+      <div class="ep-row"><div class="ep-ico">📅</div><span>April 18, 2026 &nbsp;<span class="ep-v">9:00 AM – 9:00 PM</span></span></div>
+      <div class="ep-row"><div class="ep-ico">📍</div><span>NIT Calicut Campus &nbsp;<span class="ep-v">Kozhikode, Kerala</span></span></div>
+      <div class="ep-row"><div class="ep-ico">👤</div><span>840 registered &nbsp;<span class="ep-v">160 spots left</span></span></div>
+    </div>
+
+    <div class="ep-div"></div>
+
+    <div class="tk-lbl">Select your ticket</div>
+    <div class="tks">
+      <div class="tkc sel" onclick="selTk(this,'General Pass','₹500',500)">
+        <div class="tkc-chk">✓</div>
+        <div class="tkc-top"><span class="tkc-name">General Pass</span><span class="tkc-price">₹500</span></div>
+        <div class="tkc-desc">Full day access to all technical events, workshops, and competitions. Includes lunch.</div>
+        <div class="tkc-cap">Available: <span>120 seats</span></div>
+        <div class="cap-bar"><div class="cap-fill" style="width:84%"></div></div>
+      </div>
+      <div class="tkc" onclick="selTk(this,'VIP Pass','₹1,200',1200)">
+        <div class="tkc-chk">✓</div>
+        <div class="tkc-top"><span class="tkc-name">VIP Pass</span><span class="tkc-price">₹1,200</span></div>
+        <div class="tkc-desc">Priority access, exclusive speaker sessions, VIP lounge, and premium goodies.</div>
+        <div class="tkc-cap">Available: <span>30 seats</span></div>
+        <div class="cap-bar"><div class="cap-fill" style="width:40%"></div></div>
+      </div>
+      <div class="tkc" onclick="selTk(this,'NIT Student Free','Free',0)">
+        <div class="tkc-chk">✓</div>
+        <div class="tkc-top"><span class="tkc-name">NIT Student — Free</span><span class="tkc-price free">Free</span></div>
+        <div class="tkc-desc">Free entry for NIT Calicut students. Valid student ID required at gate.</div>
+        <div class="tkc-cap">Available: <span>Unlimited</span></div>
+        <div class="cap-bar"><div class="cap-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="ep-div"></div>
+
+    <div class="os">
+      <div class="os-row"><span class="os-l">Ticket</span><span class="os-v" id="os-tk">General Pass × 1</span></div>
+      <div class="os-row"><span class="os-l">Platform Fee</span><span class="os-v" style="color:var(--green)">₹0 — Free</span></div>
+      <div class="os-row"><span class="os-l">Gateway Fee</span><span class="os-v" id="os-gw">₹11.80</span></div>
+      <div class="os-row"><span class="os-tot-l">Total</span><span class="os-tot" id="os-tot">₹511.80</span></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="fp" id="fp">
+
+    <div class="steps">
+      <div class="stp done" id="s1"><div class="stp-n">✓</div><span class="stp-l">Ticket</span></div>
+      <div class="stp-line done"></div>
+      <div class="stp active" id="s2"><div class="stp-n">2</div><span class="stp-l">Details</span></div>
+      <div class="stp-line" id="ln2"></div>
+      <div class="stp" id="s3"><div class="stp-n">3</div><span class="stp-l">Payment</span></div>
+    </div>
+
+    <div id="regForm">
+      <div class="ftitle">YOUR DETAILS</div>
+      <p class="fsub">Fill in your information below. Fields marked <span style="color:var(--o)">*</span> are required.</p>
+
+      <div class="fsect">Personal Information</div>
+      <div class="fgrp-row">
+        <div class="fgrp" id="fg-fn">
+          <label class="flbl">First Name <span class="req">*</span></label>
+          <input class="fi" id="fi-fn" type="text" placeholder="Amal" autocomplete="given-name"/>
+          <span class="ferr">Required</span>
+        </div>
+        <div class="fgrp" id="fg-ln">
+          <label class="flbl">Last Name <span class="req">*</span></label>
+          <input class="fi" id="fi-ln" type="text" placeholder="Mathew" autocomplete="family-name"/>
+          <span class="ferr">Required</span>
+        </div>
+      </div>
+      <div class="fgrp" id="fg-em">
+        <label class="flbl">Email Address <span class="req">*</span></label>
+        <input class="fi" id="fi-em" type="email" placeholder="you@example.com" autocomplete="email"/>
+        <div class="fhint">Your QR pass will be sent to this address</div>
+        <span class="ferr">Enter a valid email</span>
+      </div>
+      <div class="fgrp" id="fg-ph">
+        <label class="flbl">Phone Number <span class="req">*</span></label>
+        <input class="fi" id="fi-ph" type="tel" placeholder="+91 98765 43210" autocomplete="tel"/>
+        <span class="ferr">Phone number is required</span>
+      </div>
+
+      <div class="fdiv"></div>
+      <div class="fsect">Event Details</div>
+
+      <div class="fgrp">
+        <label class="flbl">College / Institution <span class="req">*</span></label>
+        <input class="fi" type="text" placeholder="e.g. NIT Calicut, IIT Bombay"/>
+      </div>
+      <div class="fgrp-row">
+        <div class="fgrp">
+          <label class="flbl">Department</label>
+          <select class="fi"><option value="">Select department</option><option>Computer Science</option><option>Electronics</option><option>Mechanical</option><option>Civil</option><option>Chemical</option><option>Architecture</option><option>Other</option></select>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Year of Study</label>
+          <select class="fi"><option value="">Select year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>PG / PhD</option><option>Alumni</option><option>Faculty</option></select>
+        </div>
+      </div>
+      <div class="fgrp">
+        <label class="flbl">How did you hear about Tathva?</label>
+        <div class="radio-grp">
+          <label class="ropt pk" onclick="pickR(this)"><input type="radio" name="src" checked/><span class="ropt-l">Instagram / Social Media</span></label>
+          <label class="ropt" onclick="pickR(this)"><input type="radio" name="src"/><span class="ropt-l">WhatsApp / Friends</span></label>
+          <label class="ropt" onclick="pickR(this)"><input type="radio" name="src"/><span class="ropt-l">College Notice Board</span></label>
+          <label class="ropt" onclick="pickR(this)"><input type="radio" name="src"/><span class="ropt-l">Other</span></label>
+        </div>
+      </div>
+
+      <div class="fdiv"></div>
+      <div class="fsect">Interested In</div>
+      <div class="tag-row">
+        <button type="button" class="tag-btn on" onclick="tgl(this)">Technical Events</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">Workshops</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">Paper Presentation</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">Competitions</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">Gaming</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">Cultural</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">Robotics</button>
+        <button type="button" class="tag-btn" onclick="tgl(this)">AI / ML</button>
+      </div>
+
+      <div class="fgrp">
+        <label class="flbl">Special Requirements (optional)</label>
+        <textarea class="fi" placeholder="Dietary restrictions, accessibility needs, or anything else..."></textarea>
+      </div>
+
+      <div class="fdiv"></div>
+      <label class="fcheck"><input type="checkbox" id="terms"/><span class="fcheck-l">I agree to the <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a>. I consent to receiving event updates via email and WhatsApp.</span></label>
+      <label class="fcheck"><input type="checkbox" id="photos" checked/><span class="fcheck-l">I consent to being photographed/filmed during the event for promotional use.</span></label>
+
+      <button class="fsubmit" id="subBtn" onclick="sub()" style="margin-top:16px">
+        <span id="subTxt">Continue to Payment →</span>
+      </button>
+      <div class="fsec">🔒 Secured by Gatepass · Zero platform fees</div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="succ" id="succ">
+      <div class="succ-ico">✓</div>
+      <div class="succ-title">YOU'RE IN!</div>
+      <p class="succ-sub">Your registration for <strong>Tathva '26</strong> is confirmed. Check your email for the QR pass.</p>
+      <svg width="130" height="130" viewBox="0 0 100 100" style="border-radius:10px;background:var(--d3);border:1px solid var(--br);padding:8px">
+        <rect x="5" y="5" width="35" height="35" rx="3" fill="none" stroke="#FF4D00" stroke-width="3"/>
+        <rect x="13" y="13" width="19" height="19" rx="1" fill="#FF4D00"/>
+        <rect x="60" y="5" width="35" height="35" rx="3" fill="none" stroke="#FF4D00" stroke-width="3"/>
+        <rect x="68" y="13" width="19" height="19" rx="1" fill="#FF4D00"/>
+        <rect x="5" y="60" width="35" height="35" rx="3" fill="none" stroke="#FF4D00" stroke-width="3"/>
+        <rect x="13" y="68" width="19" height="19" rx="1" fill="#FF4D00"/>
+        <rect x="48" y="48" width="7" height="7" fill="#FF4D00"/>
+        <rect x="58" y="48" width="7" height="7" fill="#333330"/>
+        <rect x="68" y="48" width="7" height="7" fill="#FF4D00"/>
+        <rect x="78" y="48" width="7" height="7" fill="#333330"/>
+        <rect x="88" y="48" width="7" height="7" fill="#FF4D00"/>
+        <rect x="48" y="58" width="7" height="7" fill="#333330"/>
+        <rect x="58" y="58" width="7" height="7" fill="#FF4D00"/>
+        <rect x="68" y="58" width="7" height="7" fill="#333330"/>
+        <rect x="78" y="58" width="7" height="7" fill="#FF4D00"/>
+        <rect x="88" y="58" width="7" height="7" fill="#333330"/>
+        <rect x="48" y="68" width="7" height="7" fill="#FF4D00"/>
+        <rect x="58" y="68" width="7" height="7" fill="#FF4D00"/>
+        <rect x="68" y="68" width="7" height="7" fill="#333330"/>
+        <rect x="78" y="68" width="7" height="7" fill="#FF4D00"/>
+        <rect x="88" y="68" width="7" height="7" fill="#FF4D00"/>
+      </svg>
+      <div class="succ-id">#GP-2602</div>
+      <p style="font-size:11px;color:var(--g);font-family:var(--fb)">Show this QR at the gate for entry</p>
+      <div class="succ-btns">
+        <button class="sbtn sbtn-p">📥 Download Pass</button>
+        <button class="sbtn sbtn-g" onclick="reset()">← Register another person</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let price=500;
+function selTk(el,name,priceStr,amt){
+  document.querySelectorAll('.tkc').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');price=amt;
+  document.getElementById('os-tk').textContent=name+' × 1';
+  const gw=amt>0?(amt*0.0236).toFixed(2):'0.00';
+  document.getElementById('os-gw').textContent=amt>0?'₹'+gw:'₹0';
+  document.getElementById('os-tot').textContent=amt>0?'₹'+(amt+parseFloat(gw)).toFixed(2):'Free';
+  document.getElementById('subTxt').textContent=amt>0?'Continue to Payment →':'Complete Registration →';
+}
+function pickR(el){document.querySelectorAll('.ropt').forEach(r=>r.classList.remove('pk'));el.classList.add('pk')}
+function tgl(el){el.classList.toggle('on')}
+function validate(){
+  let ok=true;
+  [{id:'fi-fn',fg:'fg-fn',t:v=>v.trim()},{id:'fi-ln',fg:'fg-ln',t:v=>v.trim()},
+   {id:'fi-em',fg:'fg-em',t:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)},
+   {id:'fi-ph',fg:'fg-ph',t:v=>v.trim().length>6}].forEach(c=>{
+    const el=document.getElementById(c.id),fg=document.getElementById(c.fg);
+    if(!c.t(el.value)){fg.classList.add('err');ok=false}else fg.classList.remove('err');
+  });
+  if(!document.getElementById('terms').checked){alert('Please accept the terms to continue.');ok=false}
+  return ok;
+}
+function sub(){
+  if(!validate())return;
+  const btn=document.getElementById('subBtn'),txt=document.getElementById('subTxt');
+  btn.classList.add('loading');txt.textContent='Processing...';
+  ['s2','s3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('active');el.classList.add('done');
+    el.querySelector('.stp-n').textContent='✓';
+  });
+  document.getElementById('ln2').classList.add('done');
+  setTimeout(()=>{
+    document.getElementById('regForm').style.display='none';
+    document.getElementById('succ').classList.add('show');
+    document.getElementById('fp').scrollTop=0;
+  },1400);
+}
+function reset(){
+  document.getElementById('succ').classList.remove('show');
+  document.getElementById('regForm').style.display='block';
+  document.getElementById('subBtn').classList.remove('loading');
+  document.getElementById('subTxt').textContent='Continue to Payment →';
+  document.getElementById('s2').className='stp active';
+  document.getElementById('s2').querySelector('.stp-n').textContent='2';
+  document.getElementById('s3').className='stp';
+  document.getElementById('s3').querySelector('.stp-n').textContent='3';
+  document.getElementById('ln2').classList.remove('done');
+}
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.cap-fill').forEach(b=>{const w=b.style.width;b.style.width='0';setTimeout(()=>b.style.width=w,300)});
+});
+</script>
+</body>
+</html>

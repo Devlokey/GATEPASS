@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gatepass — Free Event Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --o:#FF4D00;
+  --ol:#FF6B2B;
+  --dk:#090909;
+  --d2:#111111;
+  --d3:#1A1A1A;
+  --w:#F5F0EB;
+  --g:#888880;
+  --br:rgba(255,255,255,0.07);
+  --fd:'Bebas Neue',sans-serif;
+  --fb:'Syne',sans-serif;
+  --ft:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dk);color:var(--w);font-family:var(--ft);overflow-x:hidden}
+
+/* MOBILE MENU */
+.hamburger{
+  display:none;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:4px;z-index:600;
+}
+.hamburger span{
+  display:block;width:24px;height:2px;background:var(--w);
+  transition:all .35s cubic-bezier(.16,1,.3,1);transform-origin:center;
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.mob-menu{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(9,9,9,.97);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s cubic-bezier(.16,1,.3,1);
+}
+.mob-menu.open{opacity:1;pointer-events:all}
+.mob-menu a{
+  font-family:var(--fd);font-size:clamp(48px,12vw,72px);
+  letter-spacing:3px;color:var(--g);text-decoration:none;
+  transition:color .3s,transform .3s;
+  display:block;line-height:1.1;
+}
+.mob-menu a:hover{color:var(--w);transform:translateX(8px)}
+.mob-menu a.mob-cta{
+  color:var(--o);margin-top:16px;
+  font-size:clamp(28px,7vw,44px);
+}
+.mob-menu-foot{
+  position:absolute;bottom:40px;
+  display:flex;gap:28px;
+}
+.mob-menu-foot a{
+  font-family:var(--fb);font-size:12px;font-weight:600;
+  color:var(--g);letter-spacing:1px;
+  font-size:12px !important;transform:none !important;
+}
+
+/* PROGRESS BAR */
+#prog{
+  position:fixed;top:0;left:0;height:2px;
+  background:var(--o);z-index:9999;width:0%;
+  box-shadow:0 0 8px var(--o);
+  transition:width .08s linear;
+  pointer-events:none;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 52px;
+  transition:all .5s cubic-bezier(.16,1,.3,1);
+}
+nav.scrolled{
+  background:rgba(9,9,9,.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:14px 52px;
+  border-bottom:1px solid var(--br);
+}
+.nlogo{
+  font-family:var(--fd);font-size:22px;letter-spacing:3px;
+  text-decoration:none;color:var(--w);position:relative;
+}
+.nlogo span{color:var(--o)}
+.nlogo::after{
+  content:'';position:absolute;bottom:-2px;left:0;
+  width:0;height:1px;background:var(--o);transition:width .35s;
+}
+.nlogo:hover::after{width:100%}
+.nlinks{display:flex;align-items:center;gap:36px}
+.nlinks a{
+  color:var(--g);text-decoration:none;
+  font-family:var(--fb);font-size:13px;font-weight:600;
+  position:relative;transition:color .3s;
+}
+.nlinks a::after{
+  content:'';position:absolute;bottom:-3px;left:0;
+  width:0;height:1px;background:var(--o);
+  transition:width .4s cubic-bezier(.16,1,.3,1);
+}
+.nlinks a:hover{color:var(--w)}
+.nlinks a:hover::after{width:100%}
+.ncta{
+  background:var(--o);color:#000;
+  padding:10px 22px;border-radius:100px;
+  font-family:var(--fb);font-weight:700;font-size:13px;
+  text-decoration:none;transition:all .3s;
+  letter-spacing:.5px;
+}
+.ncta::after{display:none !important}
+.ncta:hover{background:var(--ol);transform:scale(1.05);color:#000}
+
+/* HERO */
+.hero{
+  min-height:100vh;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 0 64px;
+}
+.hbg{
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 90% 80% at 62% 28%,#8B1A00,#4A0D00 30%,var(--dk) 68%);
+}
+.hgrain{
+  position:absolute;inset:-50%;width:200%;height:200%;
+  z-index:1;opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+  animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%{transform:translate(0,0)}20%{transform:translate(3%,1%)}
+  40%{transform:translate(2%,-2%)}60%{transform:translate(1%,-1%)}
+  80%{transform:translate(3%,-3%)}100%{transform:translate(0,0)}
+}
+.horbs{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:orbfloat 12s ease-in-out infinite}
+.o1{width:500px;height:500px;background:#8B1A00;top:-100px;right:10%;opacity:.35}
+.o2{width:300px;height:300px;background:#FF4D00;top:20%;right:25%;opacity:.12;animation-delay:-4s}
+.o3{width:200px;height:200px;background:#c43000;bottom:10%;right:40%;opacity:.18;animation-delay:-8s}
+@keyframes orbfloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-40px) scale(1.05)}
+}
+
+/* Hero figure */
+.hfig{
+  position:absolute;right:7%;bottom:0;
+  width:40%;max-width:520px;height:88%;
+  z-index:2;
+  background:linear-gradient(160deg,rgba(180,60,0,.18),rgba(80,10,0,.45) 60%,transparent);
+  border-radius:50% 50% 0 0 / 30% 30% 0 0;
+  mask-image:linear-gradient(to top,transparent,black 18%,black 85%,transparent);
+  -webkit-mask-image:linear-gradient(to top,transparent,black 18%,black 85%,transparent);
+  display:flex;align-items:center;justify-content:center;
+}
+.hfig-letter{
+  font-family:var(--fd);
+  font-size:clamp(120px,16vw,220px);
+  color:rgba(255,77,0,.07);
+  letter-spacing:8px;
+  user-select:none;
+  margin-top:60px;
+}
+
+/* Scroll hint */
+.hscroll{
+  position:absolute;bottom:110px;left:52px;z-index:5;
+  display:flex;align-items:center;gap:12px;
+  animation:fadeUp .9s cubic-bezier(.16,1,.3,1) 1.2s both;
+}
+.sl{width:40px;height:1px;background:var(--o);animation:slani 2s ease-in-out infinite}
+@keyframes slani{0%,100%{width:40px;opacity:1}50%{width:18px;opacity:.3}}
+.st{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--g);font-family:var(--fb);font-weight:600}
+
+/* Hero content */
+.hcon{position:relative;z-index:5;padding:0 52px}
+.hbrow{
+  font-size:15px;font-weight:300;
+  color:rgba(245,240,235,.55);margin-bottom:10px;
+  font-family:var(--ft);
+  animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .1s both;
+}
+.htitle{
+  font-family:var(--fd);
+  font-size:clamp(80px,12vw,180px);
+  line-height:.88;color:var(--w);
+  letter-spacing:2px;
+  animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .25s both;
+}
+.htitle .ot{color:var(--o)}
+
+.hsvcs{
+  display:flex;margin-top:44px;
+  border-top:1px solid rgba(255,255,255,.08);
+  animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .55s both;
+}
+.hsvc{
+  flex:1;padding:20px 20px;
+  border-right:1px solid rgba(255,255,255,.06);
+  transition:background .3s;cursor:default;
+}
+.hsvc:first-child{padding-left:0}
+.hsvc:last-child{border-right:none}
+.hsvc:hover{background:rgba(255,77,0,.04)}
+.hsvc .num{
+  font-family:var(--fd);font-size:12px;color:var(--o);
+  letter-spacing:2px;display:block;margin-bottom:5px;
+  transition:letter-spacing .3s;
+}
+.hsvc:hover .num{letter-spacing:3.5px}
+.hsvc .lbl{font-size:12px;color:rgba(245,240,235,.5);font-family:var(--fb);font-weight:500}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* MARQUEE */
+.mqw{
+  background:var(--d2);
+  border-top:1px solid var(--br);border-bottom:1px solid var(--br);
+  padding:16px 0;overflow:hidden;position:relative;
+}
+.mqw::before,.mqw::after{
+  content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;
+  pointer-events:none;
+}
+.mqw::before{left:0;background:linear-gradient(to right,var(--d2),transparent)}
+.mqw::after{right:0;background:linear-gradient(to left,var(--d2),transparent)}
+.mqt{display:flex;width:max-content;animation:mqscroll 26s linear infinite;gap:52px}
+.mqw:hover .mqt{animation-play-state:paused}
+@keyframes mqscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mqi{
+  display:flex;align-items:center;gap:16px;white-space:nowrap;
+  font-family:var(--fb);font-size:11px;font-weight:700;
+  letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(245,240,235,.3);transition:color .3s;cursor:default;
+}
+.mqi:hover{color:var(--w)}
+.mqd{width:5px;height:5px;border-radius:50%;background:var(--o);flex-shrink:0;transition:transform .3s}
+.mqi:hover .mqd{transform:scale(2)}
+
+/* ABOUT */
+.about{
+  padding:130px 52px;
+  display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.about::before{
+  content:'';position:absolute;top:-200px;left:-200px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(255,77,0,.04),transparent 70%);
+  pointer-events:none;
+}
+.albl{
+  font-family:var(--fb);font-size:11px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;color:var(--o);
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;
+}
+.albl::before{content:'';display:inline-block;width:24px;height:1px;background:var(--o)}
+.ahead{font-family:var(--fd);font-size:clamp(40px,5.5vw,78px);line-height:.92;color:var(--w)}
+.aright{display:flex;flex-direction:column;gap:24px}
+.adesc{font-size:18px;font-weight:500;line-height:1.65;color:var(--w)}
+.asub{font-size:14px;color:var(--g);line-height:1.8}
+.acta{
+  display:inline-flex;align-items:center;gap:14px;
+  background:var(--o);color:#000;
+  font-family:var(--fb);font-weight:700;font-size:13px;
+  padding:14px 28px;border-radius:100px;
+  text-decoration:none;width:fit-content;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+}
+.acta:hover{background:var(--ol);transform:scale(1.04)}
+.acta .arr{
+  width:24px;height:24px;background:rgba(0,0,0,.15);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+
+/* FEATURES / WORK */
+.work{padding:0 52px 130px;position:relative}
+.sechdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px}
+.sectitle{font-family:var(--fd);font-size:clamp(44px,5vw,74px);color:var(--w);line-height:1}
+.seclink{
+  font-family:var(--fb);font-size:12px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--o);text-decoration:none;
+  display:flex;align-items:center;gap:8px;transition:gap .3s;
+}
+.seclink:hover{gap:14px}
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.wcard{
+  position:relative;overflow:hidden;border-radius:14px;
+  background:var(--d3);
+  transition:box-shadow .4s,transform .4s cubic-bezier(.16,1,.3,1);
+  cursor:default;
+}
+.wcard:hover{box-shadow:0 24px 60px rgba(0,0,0,.5);transform:translateY(-4px)}
+.wcph{
+  width:100%;height:260px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fd);font-size:56px;letter-spacing:4px;
+  color:rgba(245,240,235,.06);
+  background:linear-gradient(135deg,rgba(255,77,0,.05),transparent 70%);
+  transition:transform .8s cubic-bezier(.16,1,.3,1),letter-spacing .5s,color .4s;
+  user-select:none;
+}
+.wcard:hover .wcph{transform:scale(1.04);letter-spacing:8px;color:rgba(255,77,0,.14)}
+.wcmeta{
+  position:absolute;bottom:0;left:0;right:0;padding:22px;
+  background:linear-gradient(to top,rgba(0,0,0,.88),transparent);
+  transform:translateY(6px);transition:transform .4s cubic-bezier(.16,1,.3,1);
+}
+.wcard:hover .wcmeta{transform:translateY(0)}
+.wtag{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--o);margin-bottom:5px;display:block}
+.wname{font-family:var(--fb);font-size:16px;font-weight:700;color:var(--w)}
+.warr{
+  position:absolute;top:18px;right:18px;
+  width:36px;height:36px;background:var(--o);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#000;
+  transform:translate(10px,-10px) rotate(-45deg);opacity:0;
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+}
+.wcard:hover .warr{transform:translate(0,0) rotate(0);opacity:1}
+
+/* STATS */
+.stats{
+  padding:80px 52px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--br);
+  border-top:1px solid var(--br);border-bottom:1px solid var(--br);
+}
+.stat{
+  background:var(--dk);padding:48px 36px;
+  text-align:center;position:relative;overflow:hidden;
+  transition:background .4s;cursor:default;
+}
+.stat::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 150%,rgba(255,77,0,.07),transparent 70%);
+  opacity:0;transition:opacity .4s;
+}
+.stat:hover{background:rgba(255,77,0,.02)}
+.stat:hover::before{opacity:1}
+.snum{
+  font-family:var(--fd);font-size:68px;line-height:1;
+  color:var(--w);display:block;margin-bottom:8px;transition:color .3s;
+}
+.stat:hover .snum{color:var(--o)}
+.snum em{color:var(--o);font-style:normal}
+.slbl{font-size:11px;color:var(--g);letter-spacing:1.5px;text-transform:uppercase;font-weight:600;font-family:var(--fb)}
+
+/* COMPARISON */
+.comparison{padding:100px 52px;position:relative}
+.comp-head{
+  font-family:var(--fd);font-size:clamp(44px,5vw,74px);
+  color:var(--w);line-height:.95;margin-bottom:52px;
+}
+.comp-head em{color:var(--o);font-style:normal}
+.ctable{width:100%;border-collapse:collapse;border:1px solid var(--br);border-radius:14px;overflow:hidden}
+.ctable th{
+  font-family:var(--fb);font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--g);
+  text-align:left;padding:16px 24px;
+  border-bottom:1px solid var(--br);background:var(--d2);
+}
+.ctable th.highlight{color:var(--o)}
+.ctable td{
+  padding:18px 24px;border-bottom:1px solid var(--br);
+  font-size:14px;color:var(--w);font-family:var(--ft);
+  background:var(--dk);
+}
+.ctable tr:last-child td{border-bottom:none}
+.ctable td.label{color:var(--g);font-size:13px;font-family:var(--fb);font-weight:600}
+.badge-bad{
+  background:rgba(255,80,80,.1);color:#ff7070;
+  padding:4px 12px;font-size:11px;font-weight:700;
+  border-radius:100px;display:inline-block;
+  font-family:var(--fb);letter-spacing:.5px;
+}
+.badge-good{
+  background:rgba(74,222,128,.1);color:#4ade80;
+  padding:4px 12px;font-size:11px;font-weight:700;
+  border-radius:100px;display:inline-block;
+  font-family:var(--fb);letter-spacing:.5px;
+}
+
+/* CONTACT / CTA */
+.contact{
+  padding:110px 52px;
+  display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;
+  background:var(--d2);position:relative;overflow:hidden;
+}
+.contact::before{
+  content:'';position:absolute;bottom:-200px;right:-200px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(255,77,0,.05),transparent 70%);
+  pointer-events:none;
+}
+.clbl{
+  color:var(--o);font-size:11px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;font-family:var(--fb);
+}
+.clbl::before{content:'';display:inline-block;width:24px;height:1px;background:var(--o)}
+.chead{font-family:var(--fd);font-size:clamp(44px,5.5vw,82px);line-height:.9;color:var(--w)}
+.cright{display:flex;flex-direction:column;gap:20px}
+.csub{font-size:17px;font-weight:500;line-height:1.65;color:var(--w)}
+.cnote{font-size:14px;color:var(--g);line-height:1.7}
+.cbtn-wrap{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.cbtn{
+  display:inline-flex;align-items:center;gap:14px;
+  background:var(--o);color:#000;
+  font-family:var(--fb);font-weight:700;font-size:13px;
+  padding:14px 28px;border-radius:100px;
+  text-decoration:none;transition:all .3s cubic-bezier(.16,1,.3,1);
+}
+.cbtn:hover{background:var(--ol);transform:scale(1.04)}
+.cbtn-ghost{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1.5px solid rgba(255,255,255,.12);color:var(--w);
+  font-family:var(--fb);font-weight:700;font-size:13px;
+  padding:13px 28px;border-radius:100px;
+  text-decoration:none;transition:all .3s cubic-bezier(.16,1,.3,1);
+}
+.cbtn-ghost:hover{border-color:var(--o);color:var(--o);transform:scale(1.04)}
+
+/* FOOTER */
+footer{
+  background:var(--dk);border-top:1px solid var(--br);
+  padding:48px 52px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;
+}
+.flogo{font-family:var(--fd);font-size:20px;letter-spacing:3px;color:var(--w)}
+.flogo span{color:var(--o)}
+.fcopy{font-size:12px;color:var(--g);font-family:var(--fb)}
+.flinks{display:flex;gap:28px;flex-wrap:wrap}
+.flinks a{
+  color:var(--g);text-decoration:none;
+  font-size:12px;font-family:var(--fb);font-weight:600;letter-spacing:.5px;
+  transition:color .3s;
+}
+.flinks a:hover{color:var(--o)}
+
+/* ── TABLET ≤ 900px ── */
+@media(max-width:900px){
+  nav{padding:20px 28px}
+  nav.scrolled{padding:12px 28px}
+  .nlinks{display:none}
+  .hamburger{display:flex}
+
+  .hero{min-height:100svh;padding:0 0 56px}
+  .hcon{padding:0 28px}
+  .hfig{width:55%;right:0;opacity:.6}
+  .hscroll{left:28px;bottom:80px}
+
+  .hsvcs{flex-wrap:wrap}
+  .hsvc{flex:0 0 50%;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .hsvc:first-child{padding-left:0}
+  .hsvc:nth-child(2){border-right:none}
+  .hsvc:nth-child(3){border-bottom:none}
+  .hsvc:nth-child(4){border-bottom:none;border-right:none}
+
+  .about{padding:80px 28px;grid-template-columns:1fr;gap:40px}
+  .ahead{font-size:clamp(36px,8vw,60px)}
+
+  .work{padding:0 28px 80px}
+  .wgrid{grid-template-columns:repeat(2,1fr);gap:12px}
+
+  .stats{padding:48px 28px;grid-template-columns:repeat(2,1fr)}
+  .stat{padding:36px 24px}
+  .snum{font-size:52px}
+
+  .comparison{padding:60px 28px}
+  .comp-head{font-size:clamp(36px,8vw,60px)}
+  .ctable th,.ctable td{padding:14px 16px;font-size:13px}
+
+  .contact{padding:80px 28px;grid-template-columns:1fr;gap:40px}
+  .chead{font-size:clamp(40px,9vw,68px)}
+
+  footer{padding:36px 28px;flex-direction:column;align-items:flex-start;gap:20px}
+}
+
+/* ── MOBILE ≤ 600px ── */
+@media(max-width:600px){
+  nav{padding:16px 20px}
+  nav.scrolled{padding:12px 20px}
+
+  /* Hero — full bleed, text-first */
+  .hero{min-height:100svh;padding:0 0 40px;justify-content:flex-end}
+  .hcon{padding:0 20px}
+  .hbrow{font-size:13px;margin-bottom:8px}
+  .htitle{font-size:clamp(68px,18vw,100px);line-height:.88}
+
+  /* Hide figure on small screens — orbs carry the visual weight */
+  .hfig{display:none}
+
+  /* Services — 2×2 grid */
+  .hsvcs{
+    display:grid;grid-template-columns:1fr 1fr;
+    margin-top:32px;gap:0;
+  }
+  .hsvc{
+    padding:14px 12px;
+    border-right:1px solid rgba(255,255,255,.06);
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .hsvc:first-child{padding-left:12px}
+  .hsvc:nth-child(2){border-right:none}
+  .hsvc:nth-child(3){border-bottom:none}
+  .hsvc:nth-child(4){border-right:none;border-bottom:none}
+  .hsvc .lbl{font-size:11px}
+
+  /* Scroll hint hidden on mobile */
+  .hscroll{display:none}
+
+  /* About */
+  .about{padding:64px 20px;gap:32px}
+  .ahead{font-size:clamp(34px,9vw,52px);line-height:.9}
+  .adesc{font-size:16px}
+  .albl{font-size:10px}
+
+  /* Work / Features */
+  .work{padding:0 20px 64px}
+  .sechdr{flex-direction:column;align-items:flex-start;gap:12px;margin-bottom:28px}
+  .sectitle{font-size:clamp(36px,10vw,52px)}
+  .wgrid{grid-template-columns:1fr;gap:10px}
+  .wcph{height:200px;font-size:40px}
+
+  /* Stats — 2×2 */
+  .stats{padding:0;grid-template-columns:1fr 1fr}
+  .stat{padding:32px 20px}
+  .snum{font-size:44px}
+  .slbl{font-size:10px;letter-spacing:1px}
+
+  /* Comparison */
+  .comparison{padding:64px 20px}
+  .comp-head{font-size:clamp(36px,10vw,52px);margin-bottom:32px}
+  /* Stack table rows as cards on mobile */
+  .ctable thead{display:none}
+  .ctable,.ctable tbody,.ctable tr,.ctable td{display:block;width:100%}
+  .ctable tr{
+    background:var(--d3);border-radius:12px;
+    margin-bottom:10px;overflow:hidden;
+    border:1px solid var(--br);
+  }
+  .ctable td{
+    padding:12px 16px;border-bottom:1px solid var(--br);
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:13px;
+  }
+  .ctable td:last-child{border-bottom:none}
+  .ctable td.label{
+    background:rgba(255,255,255,.03);
+    font-size:11px;letter-spacing:1px;text-transform:uppercase;
+    font-family:var(--fb);color:var(--g);
+  }
+  .ctable td.label::after{content:''}
+
+  /* CTA */
+  .contact{padding:64px 20px;gap:32px}
+  .chead{font-size:clamp(40px,12vw,64px);line-height:.88}
+  .csub{font-size:15px}
+  .cbtn,.cbtn-ghost{width:100%;justify-content:center;padding:14px 20px}
+  .cbtn-wrap{width:100%}
+
+  /* Footer */
+  footer{padding:32px 20px;gap:16px}
+  .flinks{gap:20px;flex-wrap:wrap}
+  .fcopy{font-size:11px}
+}
+
+/* ── VERY SMALL ≤ 380px ── */
+@media(max-width:380px){
+  .htitle{font-size:60px}
+  .ahead{font-size:32px}
+  .snum{font-size:38px}
+  .chead{font-size:38px}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobmenu">
+  <a href="#" onclick="closeMob()">Features</a>
+  <a href="#" onclick="closeMob()">Pricing</a>
+  <a href="#" onclick="closeMob()">Docs</a>
+  <a href="#" onclick="closeMob()">GitHub</a>
+  <a href="#" class="mob-cta" onclick="closeMob()">Get started →</a>
+  <div class="mob-menu-foot">
+    <a href="#">MIT License</a>
+    <a href="#">Built for India</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="mainnav">
+  <a href="#" class="nlogo">GATE<span>PASS</span></a>
+  <div class="nlinks">
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
+    <a href="#">Docs</a>
+    <a href="#">GitHub</a>
+    <a href="#" class="ncta">Get started</a>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="toggleMob()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hbg"></div>
+  <div class="hgrain"></div>
+  <div class="horbs">
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+  </div>
+
+  <div class="hfig">
+    <div class="hfig-letter">GP</div>
+  </div>
+
+  <div class="hscroll">
+    <div class="sl"></div>
+    <span class="st">Scroll to explore</span>
+  </div>
+
+  <div class="hcon">
+    <p class="hbrow">The free, open-source event platform</p>
+    <h1 class="htitle">THE<br>FREE<br><span class="ot">PLATFORM.</span></h1>
+    <div class="hsvcs">
+      <div class="hsvc">
+        <span class="num">#01</span>
+        <span class="lbl">Event Creation</span>
+      </div>
+      <div class="hsvc">
+        <span class="num">#02</span>
+        <span class="lbl">QR Check-in</span>
+      </div>
+      <div class="hsvc">
+        <span class="num">#03</span>
+        <span class="lbl">Smart Ticketing</span>
+      </div>
+      <div class="hsvc">
+        <span class="num">#04</span>
+        <span class="lbl">Real-time Analytics</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mqw">
+  <div class="mqt">
+    <div class="mqi"><div class="mqd"></div>Event Creation</div>
+    <div class="mqi"><div class="mqd"></div>QR Check-in</div>
+    <div class="mqi"><div class="mqd"></div>Custom Forms</div>
+    <div class="mqi"><div class="mqd"></div>Razorpay Payments</div>
+    <div class="mqi"><div class="mqd"></div>Waitlisting</div>
+    <div class="mqi"><div class="mqd"></div>Live Analytics</div>
+    <div class="mqi"><div class="mqd"></div>Email Confirmations</div>
+    <div class="mqi"><div class="mqd"></div>MIT Licensed</div>
+    <div class="mqi"><div class="mqd"></div>Self-Hostable</div>
+    <div class="mqi"><div class="mqd"></div>Open Source</div>
+    <div class="mqi"><div class="mqd"></div>Event Creation</div>
+    <div class="mqi"><div class="mqd"></div>QR Check-in</div>
+    <div class="mqi"><div class="mqd"></div>Custom Forms</div>
+    <div class="mqi"><div class="mqd"></div>Razorpay Payments</div>
+    <div class="mqi"><div class="mqd"></div>Waitlisting</div>
+    <div class="mqi"><div class="mqd"></div>Live Analytics</div>
+    <div class="mqi"><div class="mqd"></div>Email Confirmations</div>
+    <div class="mqi"><div class="mqd"></div>MIT Licensed</div>
+    <div class="mqi"><div class="mqd"></div>Self-Hostable</div>
+    <div class="mqi"><div class="mqd"></div>Open Source</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about">
+  <div>
+    <div class="albl">Behind Gatepass</div>
+    <h2 class="ahead">EVENTS THAT KEEP YOUR MONEY WHERE IT BELONGS.</h2>
+  </div>
+  <div class="aright">
+    <p class="adesc">Other platforms charge up to 7% per ticket. We charge zero — and we always will.</p>
+    <p class="asub">Built for Indian college organisers who deserve great tools without the platform tax. MIT licensed, self-hostable, and production-grade out of the box.</p>
+    <a href="#" class="acta">
+      <span>Create your first event</span>
+      <div class="arr">→</div>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="work">
+  <div class="sechdr">
+    <h2 class="sectitle">FEATURES</h2>
+    <a href="#" class="seclink">View all docs →</a>
+  </div>
+  <div class="wgrid">
+    <div class="wcard">
+      <div class="wcph">01</div>
+      <div class="wcmeta">
+        <span class="wtag">Core</span>
+        <p class="wname">Event Pages &amp; Custom URLs</p>
+      </div>
+      <div class="warr">↗</div>
+    </div>
+    <div class="wcard">
+      <div class="wcph">02</div>
+      <div class="wcmeta">
+        <span class="wtag">Ticketing</span>
+        <p class="wname">Free &amp; Paid Tickets, Waitlisting</p>
+      </div>
+      <div class="warr">↗</div>
+    </div>
+    <div class="wcard">
+      <div class="wcph">03</div>
+      <div class="wcmeta">
+        <span class="wtag">Check-in</span>
+        <p class="wname">QR Scanner, Mobile-first</p>
+      </div>
+      <div class="warr">↗</div>
+    </div>
+    <div class="wcard">
+      <div class="wcph">04</div>
+      <div class="wcmeta">
+        <span class="wtag">Forms</span>
+        <p class="wname">Custom Registration Fields</p>
+      </div>
+      <div class="warr">↗</div>
+    </div>
+    <div class="wcard">
+      <div class="wcph">05</div>
+      <div class="wcmeta">
+        <span class="wtag">Payments</span>
+        <p class="wname">Razorpay, Zero Platform Fee</p>
+      </div>
+      <div class="warr">↗</div>
+    </div>
+    <div class="wcard">
+      <div class="wcph">06</div>
+      <div class="wcmeta">
+        <span class="wtag">Analytics</span>
+        <p class="wname">Live Stats &amp; CSV Export</p>
+      </div>
+      <div class="warr">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat">
+    <span class="snum"><em>0</em>%</span>
+    <span class="slbl">Platform fee. Forever.</span>
+  </div>
+  <div class="stat">
+    <span class="snum">∞</span>
+    <span class="slbl">Registrations on free tier</span>
+  </div>
+  <div class="stat">
+    <span class="snum">MIT</span>
+    <span class="slbl">License. Fork it. Own it.</span>
+  </div>
+  <div class="stat">
+    <span class="snum"><em>5</em>min</span>
+    <span class="slbl">Signup to live event</span>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="comparison">
+  <h2 class="comp-head">WHY NOT<br><em>OTHER</em><br>PLATFORMS?</h2>
+  <table class="ctable">
+    <thead>
+      <tr>
+        <th style="width:40%">Feature</th>
+        <th style="width:30%">Other platforms</th>
+        <th class="highlight" style="width:30%">Gatepass</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label">Platform fee</td>
+        <td><span class="badge-bad">Up to 5% per ticket</span></td>
+        <td><span class="badge-good">0% — always</span></td>
+      </tr>
+      <tr>
+        <td class="label">Gateway fee</td>
+        <td><span class="badge-bad">Extra 2–3%</span></td>
+        <td><span class="badge-good">Pass-through only</span></td>
+      </tr>
+      <tr>
+        <td class="label">Source code</td>
+        <td><span class="badge-bad">Closed source</span></td>
+        <td><span class="badge-good">MIT licensed</span></td>
+      </tr>
+      <tr>
+        <td class="label">Self-hosting</td>
+        <td><span class="badge-bad">Not possible</span></td>
+        <td><span class="badge-good">Full support</span></td>
+      </tr>
+      <tr>
+        <td class="label">Cost — 2000 attendees @ ₹500</td>
+        <td><span class="badge-bad">₹70,000+ gone</span></td>
+        <td><span class="badge-good">₹0</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CTA -->
+<section class="contact">
+  <div>
+    <div class="clbl">Ready to ship?</div>
+    <h2 class="chead">YOUR FEST.<br>YOUR MONEY.</h2>
+  </div>
+  <div class="cright">
+    <p class="csub">No platform fee. No credit card. No catch. Gatepass is free forever and open source — so you own it completely.</p>
+    <p class="cnote">Deploy on Vercel + Supabase in under 5 minutes.</p>
+    <div class="cbtn-wrap">
+      <a href="#" class="cbtn">Create your first event →</a>
+      <a href="#" class="cbtn-ghost">⭐ Star on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="flogo">GATE<span>PASS</span></div>
+  <span class="fcopy" id="fcopy">© 2026 Gatepass. MIT Licensed. Built for India.</span>
+  <div class="flinks">
+    <a href="#">GitHub</a>
+    <a href="#">Docs</a>
+    <a href="#">Contributing</a>
+    <a href="#">License</a>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('mainnav');
+const prog = document.getElementById('prog');
+const hamburger = document.getElementById('hamburger');
+const mobmenu = document.getElementById('mobmenu');
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 40) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  prog.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+});
+
+function toggleMob() {
+  const open = mobmenu.classList.toggle('open');
+  hamburger.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+function closeMob() {
+  mobmenu.classList.remove('open');
+  hamburger.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeMob();
+});
+</script>
+</body>
+</html>
