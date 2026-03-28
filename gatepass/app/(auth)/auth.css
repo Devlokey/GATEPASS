@@ -527,3 +527,32 @@
     font-size: 30px;
   }
 }
+
+@media (max-width: 480px) {
+  /* Full-width card, no rounded corners on edges */
+  .auth-page { padding: 0; align-items: flex-end; }
+  .auth-card {
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 100%;
+    max-height: 96vh; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .auth-card-top { padding: 28px 20px 20px; }
+  .auth-card-body { padding: 0 20px 32px; }
+  .auth-card-title { font-size: 28px; }
+
+  /* Touch-friendly inputs */
+  input, select, textarea {
+    font-size: 16px !important; /* prevents iOS zoom */
+    min-height: 48px;
+  }
+
+  /* Safe area for home bar */
+  .auth-card { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+@media (max-width: 360px) {
+  .auth-card-title { font-size: 24px; }
+  .auth-card-top { padding: 24px 16px 16px; }
+  .auth-card-body { padding: 0 16px 28px; }
+}
