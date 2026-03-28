@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tathva '26 — NIT Calicut · Gatepass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --o:#FF4D00;--ol:#FF6B2B;--dk:#090909;--d2:#0f0f0f;--d3:#161616;--d4:#1e1e1e;
+  --w:#F5F0EB;--g:#666560;--g2:#333330;
+  --br:rgba(255,255,255,0.06);--br2:rgba(255,255,255,0.12);
+  --green:#4ade80;
+  --fd:'Bebas Neue',sans-serif;--fb:'Syne',sans-serif;--ft:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dk);color:var(--w);font-family:var(--ft);overflow-x:hidden}
+
+/* GRAIN */
+body::before{content:'';position:fixed;inset:-50%;width:200%;height:200%;z-index:0;opacity:.035;pointer-events:none;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+background-size:200px;animation:grain 8s steps(10) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(3%,1%)}40%{transform:translate(2%,-2%)}60%{transform:translate(1%,-1%)}80%{transform:translate(3%,-3%)}100%{transform:translate(0,0)}}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 48px;
+  background:rgba(9,9,9,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--br);
+}
+.nlogo{font-family:var(--fd);font-size:20px;letter-spacing:3px;text-decoration:none;color:var(--w)}
+.nlogo span{color:var(--o)}
+.nav-r{display:flex;align-items:center;gap:12px}
+.nav-share{
+  display:flex;align-items:center;gap:6px;
+  background:none;border:1px solid var(--br2);color:var(--g);
+  padding:7px 14px;border-radius:7px;
+  font-family:var(--fb);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.nav-share:hover{border-color:rgba(255,255,255,.2);color:var(--w)}
+.nav-reg{
+  background:var(--o);color:#000;
+  padding:8px 20px;border-radius:7px;
+  font-family:var(--fb);font-size:12px;font-weight:700;
+  text-decoration:none;transition:all .2s;
+}
+.nav-reg:hover{background:var(--ol)}
+
+/* HERO */
+.hero{position:relative;height:520px;overflow:hidden}
+.hero-banner{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:brightness(.55);
+}
+.hero-banner-ph{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,#1a0800 0%,#3d1200 40%,#8B1A00 70%,#c43000 100%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.hero-banner-ph::after{
+  content:'TATHVA';position:absolute;
+  font-family:var(--fd);font-size:clamp(80px,15vw,200px);
+  color:rgba(255,255,255,.04);letter-spacing:8px;
+  pointer-events:none;user-select:none;
+}
+/* animated orbs in banner */
+.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);animation:of 10s ease-in-out infinite}
+.ho1{width:400px;height:400px;background:#8B1A00;top:-100px;right:5%;opacity:.5}
+.ho2{width:250px;height:250px;background:#FF4D00;top:30%;right:30%;opacity:.15;animation-delay:-4s}
+@keyframes of{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,var(--dk) 0%,rgba(9,9,9,.4) 50%,transparent 100%);
+}
+.hero-content{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:0 52px 40px;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+}
+.hero-left{}
+.hero-status{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.2);
+  color:var(--green);padding:4px 12px;border-radius:100px;
+  font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:1px;
+  margin-bottom:12px;
+}
+.hero-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-title{
+  font-family:var(--fd);
+  font-size:clamp(48px,7vw,96px);
+  line-height:.88;color:var(--w);
+  letter-spacing:2px;margin-bottom:12px;
+}
+.hero-meta{display:flex;flex-wrap:wrap;gap:16px}
+.hero-meta-item{
+  display:flex;align-items:center;gap:7px;
+  font-size:13px;color:rgba(245,240,235,.7);
+}
+.hero-meta-ico{font-size:14px}
+.hero-meta-item b{color:var(--w);font-weight:500}
+.hero-right{flex-shrink:0}
+.hero-cta{
+  display:flex;align-items:center;gap:10px;
+  background:var(--o);color:#000;
+  padding:14px 28px;border-radius:10px;
+  font-family:var(--fb);font-size:14px;font-weight:700;
+  text-decoration:none;transition:all .3s cubic-bezier(.16,1,.3,1);
+  white-space:nowrap;
+}
+.hero-cta:hover{background:var(--ol);transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,77,0,.3)}
+
+/* CAPACITY BAR */
+.cap-strip{
+  background:var(--d2);border-bottom:1px solid var(--br);
+  padding:14px 52px;
+  display:flex;align-items:center;gap:16px;
+}
+.cap-label{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--g);white-space:nowrap}
+.cap-bar{flex:1;height:4px;background:var(--d4);border-radius:2px;overflow:hidden;max-width:240px}
+.cap-fill{height:100%;border-radius:2px;background:var(--o);transition:width .8s cubic-bezier(.16,1,.3,1)}
+.cap-count{font-family:var(--fb);font-size:11px;font-weight:700;color:var(--w);white-space:nowrap}
+.cap-left{font-family:var(--fd);font-size:18px;color:var(--o);white-space:nowrap}
+
+/* MAIN LAYOUT */
+.main{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:0;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 48px;
+  position:relative;z-index:1;
+}
+
+/* LEFT */
+.left{padding:40px 40px 40px 0;border-right:1px solid var(--br)}
+
+/* SECTION */
+.sec{margin-bottom:44px}
+.sec-title{
+  font-family:var(--fd);font-size:22px;letter-spacing:2px;color:var(--w);
+  margin-bottom:16px;display:flex;align-items:center;gap:10px;
+}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--br)}
+
+/* DESCRIPTION */
+.desc{font-size:15px;color:rgba(245,240,235,.75);line-height:1.8}
+.desc p{margin-bottom:12px}
+.desc p:last-child{margin-bottom:0}
+
+/* SCHEDULE */
+.schedule{display:flex;flex-direction:column;gap:0}
+.sch-item{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:16px 0;border-bottom:1px solid var(--br);
+  position:relative;
+}
+.sch-item:last-child{border-bottom:none}
+.sch-time{
+  font-family:var(--fd);font-size:15px;color:var(--o);
+  min-width:72px;flex-shrink:0;letter-spacing:1px;
+  padding-top:2px;
+}
+.sch-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--br2);
+  flex-shrink:0;margin-top:6px;
+}
+.sch-item.now .sch-dot{background:var(--green);animation:pulse 2s ease-in-out infinite}
+.sch-body{flex:1}
+.sch-name{font-family:var(--fb);font-size:14px;font-weight:700;color:var(--w);margin-bottom:3px}
+.sch-meta{font-size:12px;color:var(--g)}
+.sch-tag{
+  display:inline-flex;padding:2px 8px;border-radius:100px;
+  font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:.5px;
+  margin-left:8px;
+}
+.tag-tech{background:rgba(96,165,250,.1);color:#60a5fa}
+.tag-cult{background:rgba(167,139,250,.1);color:#a78bfa}
+.tag-work{background:rgba(251,191,36,.1);color:#fbbf24}
+.tag-comp{background:rgba(255,77,0,.1);color:var(--o)}
+
+/* SPEAKERS */
+.speakers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.speaker-card{
+  background:var(--d3);border:1px solid var(--br);border-radius:10px;
+  padding:16px;text-align:center;transition:border-color .2s;
+}
+.speaker-card:hover{border-color:var(--br2)}
+.sp-av{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--d4),var(--g2));
+  border:1px solid var(--br);margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fb);font-size:14px;font-weight:700;color:var(--g);
+}
+.sp-name{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w);margin-bottom:3px}
+.sp-role{font-size:11px;color:var(--g);line-height:1.4}
+
+/* LOCATION */
+.loc-card{
+  background:var(--d3);border:1px solid var(--br);border-radius:10px;overflow:hidden;
+}
+.loc-map{
+  width:100%;height:160px;background:var(--d4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;border-bottom:1px solid var(--br);
+  position:relative;overflow:hidden;
+}
+.loc-map::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%,rgba(255,77,0,.08),transparent 70%);
+}
+.loc-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(var(--br) 1px,transparent 1px),linear-gradient(90deg,var(--br) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+.loc-pin{position:relative;z-index:1;font-size:32px;filter:drop-shadow(0 0 12px rgba(255,77,0,.4))}
+.loc-body{padding:14px 16px}
+.loc-name{font-family:var(--fb);font-size:13px;font-weight:700;color:var(--w);margin-bottom:3px}
+.loc-addr{font-size:12px;color:var(--g)}
+.loc-link{
+  display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+  font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:var(--o);text-decoration:none;transition:opacity .2s;
+}
+.loc-link:hover{opacity:.7}
+
+/* RIGHT SIDEBAR */
+.right{padding:40px 0 40px 36px;position:sticky;top:57px;height:fit-content}
+
+/* TICKET CARD */
+.ticket-box{
+  background:var(--d3);border:1px solid var(--br);border-radius:12px;
+  overflow:hidden;margin-bottom:14px;
+}
+.ticket-box-head{
+  padding:14px 18px;border-bottom:1px solid var(--br);background:var(--d2);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.tb-label{font-family:var(--fd);font-size:14px;letter-spacing:1.5px;color:var(--w)}
+.tb-avail{font-family:var(--fb);font-size:10px;font-weight:700;color:var(--green)}
+.ticket-list{padding:4px 0}
+.tk{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 18px;border-bottom:1px solid var(--br);
+  cursor:pointer;transition:background .2s;
+  position:relative;
+}
+.tk:last-child{border-bottom:none}
+.tk:hover{background:rgba(255,255,255,.02)}
+.tk.sel{background:rgba(255,77,0,.05)}
+.tk.sel::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--o);border-radius:0}
+.tk-l{flex:1}
+.tk-name{font-family:var(--fb);font-size:13px;font-weight:700;color:var(--w);margin-bottom:2px}
+.tk-desc{font-size:11px;color:var(--g)}
+.tk-r{text-align:right;flex-shrink:0;margin-left:12px}
+.tk-price{font-family:var(--fd);font-size:20px;color:var(--o)}
+.tk-price.free{color:var(--green)}
+.tk-cap{font-size:10px;color:var(--g);margin-top:2px}
+.tk-radio{
+  width:16px;height:16px;border-radius:50%;border:1.5px solid var(--br2);
+  flex-shrink:0;margin-left:10px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.tk.sel .tk-radio{background:var(--o);border-color:var(--o)}
+.tk.sel .tk-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#000}
+
+/* ORDER SUMMARY */
+.order-box{
+  background:var(--d3);border:1px solid var(--br);border-radius:12px;
+  padding:16px 18px;margin-bottom:14px;
+}
+.order-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.order-row:last-child{margin-bottom:0;padding-top:8px;border-top:1px solid var(--br)}
+.or-l{font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g)}
+.or-v{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w)}
+.or-v.free{color:var(--green)}
+.or-tot{font-family:var(--fd);font-size:24px;color:var(--w)}
+.or-tot-l{font-family:var(--fd);font-size:13px;color:var(--g);letter-spacing:1px}
+
+.reg-btn{
+  width:100%;padding:13px;border-radius:9px;
+  background:var(--o);border:none;color:#000;
+  font-family:var(--fb);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.reg-btn:hover{background:var(--ol);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,77,0,.25)}
+.reg-btn:active{transform:translateY(0)}
+
+.sec-note{
+  text-align:center;margin-top:10px;
+  font-size:11px;color:var(--g);font-family:var(--fb);
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+
+/* ORGANIZER */
+.org-card{
+  background:var(--d3);border:1px solid var(--br);border-radius:10px;
+  padding:16px 18px;margin-top:14px;
+}
+.org-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.org-av{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--o),#a33000);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fb);font-size:12px;font-weight:700;color:#000;flex-shrink:0;
+}
+.org-name{font-family:var(--fb);font-size:13px;font-weight:700;color:var(--w)}
+.org-sub{font-size:11px;color:var(--g)}
+.org-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.org-stat{background:var(--d4);border-radius:7px;padding:10px 12px;text-align:center}
+.org-stat-v{font-family:var(--fd);font-size:22px;color:var(--w)}
+.org-stat-v em{color:var(--o);font-style:normal}
+.org-stat-l{font-size:10px;color:var(--g);font-family:var(--fb)}
+.org-contact{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin-top:12px;padding:8px;border-radius:7px;border:1px solid var(--br);
+  font-family:var(--fb);font-size:11px;font-weight:600;color:var(--g);
+  cursor:pointer;transition:all .2s;background:none;width:100%;
+}
+.org-contact:hover{border-color:var(--br2);color:var(--w)}
+
+/* SHARE */
+.share-row{display:flex;gap:8px;margin-top:14px}
+.share-btn{
+  flex:1;padding:9px;border-radius:8px;border:1px solid var(--br);
+  background:var(--d3);color:var(--g);font-family:var(--fb);
+  font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.share-btn:hover{border-color:var(--br2);color:var(--w)}
+
+/* MOBILE STICKY CTA */
+.mob-cta{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
+  padding:12px 16px;
+  background:rgba(9,9,9,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--br);
+}
+.mob-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mob-cta-info{flex:1;min-width:0}
+.mob-cta-price{font-family:var(--fd);font-size:22px;color:var(--w)}
+.mob-cta-label{font-size:11px;color:var(--g);font-family:var(--fb)}
+.mob-cta-btn{
+  background:var(--o);color:#000;padding:12px 24px;border-radius:9px;
+  font-family:var(--fb);font-size:13px;font-weight:700;border:none;
+  cursor:pointer;transition:background .2s;flex-shrink:0;
+}
+.mob-cta-btn:hover{background:var(--ol)}
+
+/* FOOTER */
+.page-footer{
+  border-top:1px solid var(--br);padding:28px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+}
+.pf-logo{font-family:var(--fd);font-size:17px;letter-spacing:3px;color:var(--w)}
+.pf-logo span{color:var(--o)}
+.pf-note{font-size:11px;color:var(--g);font-family:var(--fb)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .hero-content{padding:0 20px 32px;flex-direction:column;align-items:flex-start;gap:16px}
+  .cap-strip{padding:12px 20px;flex-wrap:wrap;gap:10px}
+  .main{grid-template-columns:1fr;padding:0 20px;max-width:100%}
+  .left{padding:28px 0;border-right:none;border-bottom:1px solid var(--br)}
+  .right{padding:28px 0 80px;position:static}
+  .mob-cta{display:block}
+  .reg-btn{display:none}
+  .order-box,.sec-note,.share-row,.org-card{display:none}
+  .ticket-box{margin-bottom:0}
+  .hero-title{font-size:clamp(40px,9vw,68px)}
+  .speakers{grid-template-columns:repeat(2,1fr)}
+  .page-footer{padding:24px 20px;flex-direction:column;gap:8px;text-align:center}
+}
+@media(max-width:480px){
+  nav{padding:12px 16px}
+  .hero{height:420px}
+  .hero-content{padding:0 16px 24px}
+  .hero-title{font-size:clamp(34px,10vw,56px)}
+  .cap-strip{padding:10px 16px}
+  .main{padding:0 16px}
+  .speakers{grid-template-columns:1fr 1fr}
+  .page-footer{padding:20px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="gatepass.html" class="nlogo">GATE<span>PASS</span></a>
+  <div class="nav-r">
+    <button class="nav-share" onclick="shareEvent()">↗ Share</button>
+    <a href="register.html" class="nav-reg">Register Now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-banner-ph">
+    <div class="hero-orb ho1"></div>
+    <div class="hero-orb ho2"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-status">Registration Open</div>
+      <h1 class="hero-title">TATHVA '26<br>NIT CALICUT</h1>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><span class="hero-meta-ico">📅</span>April 18, 2026 &nbsp;<b>9:00 AM – 9:00 PM</b></div>
+        <div class="hero-meta-item"><span class="hero-meta-ico">📍</span>NIT Calicut Campus, &nbsp;<b>Kozhikode, Kerala</b></div>
+        <div class="hero-meta-item"><span class="hero-meta-ico">👤</span><b>840</b>&nbsp;registered · <b style="color:var(--o)">160 spots left</b></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <a href="register.html" class="hero-cta">Register Now →</a>
+    </div>
+  </div>
+</div>
+
+<!-- CAPACITY BAR -->
+<div class="cap-strip">
+  <span class="cap-label">Capacity</span>
+  <div class="cap-bar"><div class="cap-fill" id="capFill" style="width:0%"></div></div>
+  <span class="cap-count">840 / 1000 registered</span>
+  <span class="cap-left">160 left</span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+
+    <!-- ABOUT -->
+    <div class="sec">
+      <div class="sec-title">ABOUT</div>
+      <div class="desc">
+        <p>Tathva is the annual National Technical Festival of NIT Calicut — one of India's premier technical extravaganzas. Now in its 26th edition, Tathva '26 brings together the brightest minds from across the country for a day of innovation, competition, and collaboration.</p>
+        <p>From cutting-edge workshops and paper presentations to robotics battles and hackathons, Tathva offers something for every engineering mind. With over 50+ events spanning technical, cultural, and competitive domains, this is the one fest you can't miss.</p>
+        <p>Come build, compete, and connect with India's top student community.</p>
+      </div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="sec">
+      <div class="sec-title">SCHEDULE</div>
+      <div class="schedule">
+        <div class="sch-item">
+          <div class="sch-time">9:00</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">Registration & Check-in <span class="sch-tag tag-comp">Entry</span></div>
+            <div class="sch-meta">Main Gate · NIT Calicut Campus</div>
+          </div>
+        </div>
+        <div class="sch-item now">
+          <div class="sch-time">10:00</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">Opening Ceremony <span class="sch-tag tag-cult">Cultural</span></div>
+            <div class="sch-meta">Main Auditorium · Keynote by Dr. Rajeev Kumar</div>
+          </div>
+        </div>
+        <div class="sch-item">
+          <div class="sch-time">11:00</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">AI/ML Workshop <span class="sch-tag tag-work">Workshop</span></div>
+            <div class="sch-meta">Seminar Hall A · Limited to 60 participants</div>
+          </div>
+        </div>
+        <div class="sch-item">
+          <div class="sch-time">12:00</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">Robowar — Robotics Competition <span class="sch-tag tag-tech">Technical</span></div>
+            <div class="sch-meta">Sports Arena · Open to all teams</div>
+          </div>
+        </div>
+        <div class="sch-item">
+          <div class="sch-time">13:30</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">Lunch Break</div>
+            <div class="sch-meta">Central Dining · Included with all pass types</div>
+          </div>
+        </div>
+        <div class="sch-item">
+          <div class="sch-time">14:30</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">Paper Presentation <span class="sch-tag tag-tech">Technical</span></div>
+            <div class="sch-meta">Lecture Hall Complex · Multiple tracks</div>
+          </div>
+        </div>
+        <div class="sch-item">
+          <div class="sch-time">16:00</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">VibeCoding Hackathon <span class="sch-tag tag-comp">Competition</span></div>
+            <div class="sch-meta">Computer Science Block · Build in 3 hours</div>
+          </div>
+        </div>
+        <div class="sch-item">
+          <div class="sch-time">19:00</div>
+          <div class="sch-dot"></div>
+          <div class="sch-body">
+            <div class="sch-name">Prize Distribution & Closing <span class="sch-tag tag-cult">Cultural</span></div>
+            <div class="sch-meta">Main Auditorium · Closing performance by Prateek Kuhad</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPEAKERS -->
+    <div class="sec">
+      <div class="sec-title">SPEAKERS</div>
+      <div class="speakers">
+        <div class="speaker-card">
+          <div class="sp-av">RK</div>
+          <div class="sp-name">Dr. Rajeev Kumar</div>
+          <div class="sp-role">Director, NIT Calicut</div>
+        </div>
+        <div class="speaker-card">
+          <div class="sp-av">AM</div>
+          <div class="sp-name">Amal Mathew</div>
+          <div class="sp-role">Founder, Dinerato</div>
+        </div>
+        <div class="speaker-card">
+          <div class="sp-av">PS</div>
+          <div class="sp-name">Priya Sharma</div>
+          <div class="sp-role">AI Research Lead, Google</div>
+        </div>
+        <div class="speaker-card">
+          <div class="sp-av">VN</div>
+          <div class="sp-name">Vikram Nair</div>
+          <div class="sp-role">CTO, Razorpay</div>
+        </div>
+        <div class="speaker-card">
+          <div class="sp-av">SK</div>
+          <div class="sp-name">Siddharth K.</div>
+          <div class="sp-role">YC Partner</div>
+        </div>
+        <div class="speaker-card">
+          <div class="sp-av">MJ</div>
+          <div class="sp-name">Mukund Jha</div>
+          <div class="sp-role">Founder, Emergent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="sec">
+      <div class="sec-title">LOCATION</div>
+      <div class="loc-card">
+        <div class="loc-map">
+          <div class="loc-grid"></div>
+          <div class="loc-pin">📍</div>
+        </div>
+        <div class="loc-body">
+          <div class="loc-name">NIT Calicut Campus</div>
+          <div class="loc-addr">National Institute of Technology Calicut, NIT Campus P.O., Kozhikode, Kerala 673601</div>
+          <a href="#" class="loc-link" onclick="toast('Opening in Google Maps')">Open in Maps →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right">
+
+    <!-- TICKETS -->
+    <div class="ticket-box">
+      <div class="ticket-box-head">
+        <span class="tb-label">TICKETS</span>
+        <span class="tb-avail">● Registration open</span>
+      </div>
+      <div class="ticket-list">
+        <div class="tk sel" onclick="selTk(this,500,'General Pass')">
+          <div class="tk-l">
+            <div class="tk-name">General Pass</div>
+            <div class="tk-desc">Full day · All events · Lunch included</div>
+          </div>
+          <div class="tk-r">
+            <div class="tk-price">₹500</div>
+            <div class="tk-cap">120 left</div>
+          </div>
+          <div class="tk-radio"></div>
+        </div>
+        <div class="tk" onclick="selTk(this,1200,'VIP Pass')">
+          <div class="tk-l">
+            <div class="tk-name">VIP Pass</div>
+            <div class="tk-desc">Priority access · Speaker sessions · Goodies</div>
+          </div>
+          <div class="tk-r">
+            <div class="tk-price">₹1,200</div>
+            <div class="tk-cap">30 left</div>
+          </div>
+          <div class="tk-radio"></div>
+        </div>
+        <div class="tk" onclick="selTk(this,0,'NIT Student Free')">
+          <div class="tk-l">
+            <div class="tk-name">NIT Student</div>
+            <div class="tk-desc">Valid student ID required at entry</div>
+          </div>
+          <div class="tk-r">
+            <div class="tk-price free">Free</div>
+            <div class="tk-cap">Unlimited</div>
+          </div>
+          <div class="tk-radio"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-box">
+      <div class="order-row"><span class="or-l">Ticket</span><span class="or-v" id="or-tk">General Pass × 1</span></div>
+      <div class="order-row"><span class="or-l">Platform fee</span><span class="or-v free">₹0 — Free</span></div>
+      <div class="order-row"><span class="or-l">Gateway fee</span><span class="or-v" id="or-gw">₹11.80</span></div>
+      <div class="order-row"><span class="or-tot-l">TOTAL</span><span class="or-tot" id="or-tot">₹511.80</span></div>
+    </div>
+
+    <button class="reg-btn" onclick="window.location.href='register.html'">
+      Register Now →
+    </button>
+    <div class="sec-note">🔒 Secured by Gatepass · Zero platform fees</div>
+
+    <!-- SHARE -->
+    <div class="share-row">
+      <button class="share-btn" onclick="shareEvent()">↗ Share</button>
+      <button class="share-btn" onclick="toast('Added to calendar!')">📅 Save date</button>
+      <button class="share-btn" onclick="toast('Copied link!')">🔗 Copy link</button>
+    </div>
+
+    <!-- ORGANIZER -->
+    <div class="org-card">
+      <div class="org-head">
+        <div class="org-av">NC</div>
+        <div>
+          <div class="org-name">NIT Calicut · Tathva Council</div>
+          <div class="org-sub">Verified organizer · 12 events on Gatepass</div>
+        </div>
+      </div>
+      <div class="org-stats">
+        <div class="org-stat">
+          <div class="org-stat-v"><em>12</em></div>
+          <div class="org-stat-l">Events hosted</div>
+        </div>
+        <div class="org-stat">
+          <div class="org-stat-v"><em>8.4k</em></div>
+          <div class="org-stat-l">Total attendees</div>
+        </div>
+      </div>
+      <button class="org-contact" onclick="toast('Contact form coming soon')">✉ Contact organizer</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- PAGE FOOTER -->
+<div class="page-footer">
+  <div class="pf-logo">GATE<span>PASS</span></div>
+  <div class="pf-note">Free, open-source event platform · MIT Licensed · Built for India</div>
+</div>
+
+<!-- MOBILE STICKY CTA -->
+<div class="mob-cta">
+  <div class="mob-cta-inner">
+    <div class="mob-cta-info">
+      <div class="mob-cta-price" id="mob-price">₹500</div>
+      <div class="mob-cta-label">General Pass · 120 left</div>
+    </div>
+    <button class="mob-cta-btn" onclick="window.location.href='register.html'">Register Now →</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="tk" style="position:fixed;bottom:80px;right:22px;z-index:9999;background:var(--d3);border:1px solid var(--br2);border-radius:9px;padding:11px 16px;font-family:var(--fb);font-size:12px;font-weight:600;color:var(--w);display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);pointer-events:none;min-width:180px">
+  <span style="color:var(--o)">●</span><span id="tkm">Done</span>
+</div>
+
+<script>
+// Capacity bar animation
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('capFill').style.width='84%';
+  },300);
+});
+
+// Ticket selection
+let selPrice=500;
+function selTk(el,price,name){
+  document.querySelectorAll('.tk').forEach(t=>t.classList.remove('sel'));
+  el.classList.add('sel');
+  selPrice=price;
+  const gw=price>0?(price*0.0236).toFixed(2):'0.00';
+  document.getElementById('or-tk').textContent=name+' × 1';
+  document.getElementById('or-gw').textContent=price>0?'₹'+gw:'₹0';
+  document.getElementById('or-tot').textContent=price>0?'₹'+(price+parseFloat(gw)).toFixed(2):'Free';
+  document.getElementById('mob-price').textContent=price>0?'₹'+price:'Free';
+}
+
+// Share
+function shareEvent(){
+  if(navigator.share){
+    navigator.share({title:'Tathva \'26 — NIT Calicut',text:'Register for Tathva \'26',url:window.location.href});
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    toast('Link copied!');
+  }
+}
+
+// Toast
+function toast(msg){
+  const t=document.getElementById('tk');
+  document.getElementById('tkm').textContent=msg;
+  t.style.transform='translateY(0)';t.style.opacity='1';
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>{t.style.transform='translateY(80px)';t.style.opacity='0'},2600);
+}
+</script>
+</body>
+</html>

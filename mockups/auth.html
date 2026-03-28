@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gatepass — Get Started</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --o:#FF4D00;--ol:#FF6B2B;--dk:#090909;--d2:#0f0f0f;--d3:#161616;--d4:#1e1e1e;
+  --w:#F5F0EB;--g:#666560;--g2:#333330;
+  --br:rgba(255,255,255,0.06);--br2:rgba(255,255,255,0.12);
+  --green:#4ade80;--red:#f87171;
+  --fd:'Bebas Neue',sans-serif;--fb:'Syne',sans-serif;--ft:'DM Sans',sans-serif;
+}
+html,body{height:100%;background:var(--dk);color:var(--w);font-family:var(--ft);overflow-x:hidden}
+
+/* GRAIN */
+body::before{content:'';position:fixed;inset:-50%;width:200%;height:200%;z-index:0;opacity:.04;pointer-events:none;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+background-size:200px;animation:grain 8s steps(10) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(3%,1%)}40%{transform:translate(2%,-2%)}60%{transform:translate(1%,-1%)}80%{transform:translate(3%,-3%)}100%{transform:translate(0,0)}}
+
+/* ORBS */
+.orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:of 12s ease-in-out infinite}
+.o1{width:500px;height:500px;background:#6B1A00;top:-200px;right:-100px;opacity:.3}
+.o2{width:300px;height:300px;background:#FF4D00;top:30%;right:10%;opacity:.08;animation-delay:-4s}
+.o3{width:250px;height:250px;background:#c43000;bottom:-100px;left:20%;opacity:.12;animation-delay:-8s}
+@keyframes of{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
+
+/* LAYOUT */
+.wrap{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;flex-shrink:0}
+.nlogo{font-family:var(--fd);font-size:20px;letter-spacing:3px;text-decoration:none;color:var(--w)}
+.nlogo span{color:var(--o)}
+.nav-link{font-family:var(--fb);font-size:12px;font-weight:600;color:var(--g);text-decoration:none;transition:color .2s}
+.nav-link:hover{color:var(--w)}
+
+/* SCREEN MANAGER */
+.screen{display:none;flex:1;align-items:center;justify-content:center;padding:20px 24px 40px}
+.screen.active{display:flex}
+
+/* AUTH CARD */
+.card{
+  width:100%;max-width:420px;
+  background:var(--d2);border:1px solid var(--br);border-radius:16px;
+  overflow:hidden;
+  animation:cardIn .5s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.card-top{padding:32px 32px 24px;border-bottom:1px solid var(--br)}
+.card-tag{font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--o);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.card-tag::before{content:'';width:16px;height:1px;background:var(--o);display:inline-block}
+.card-title{font-family:var(--fd);font-size:36px;letter-spacing:2px;color:var(--w);line-height:.95;margin-bottom:6px}
+.card-sub{font-size:13px;color:var(--g);line-height:1.55}
+.card-body{padding:28px 32px 32px}
+
+/* SOCIAL AUTH */
+.soc-btn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:11px;border-radius:9px;border:1px solid var(--br2);
+  background:rgba(255,255,255,.03);color:var(--w);
+  font-family:var(--fb);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;margin-bottom:10px;
+}
+.soc-btn:hover{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+.soc-ico{width:18px;height:18px;flex-shrink:0}
+
+/* DIVIDER */
+.or{display:flex;align-items:center;gap:12px;margin:18px 0}
+.or-line{flex:1;height:1px;background:var(--br)}
+.or-txt{font-family:var(--fb);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g)}
+
+/* FORM */
+.fgrp{margin-bottom:14px}
+.flbl{display:block;font-family:var(--fb);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);margin-bottom:5px}
+.fi{
+  width:100%;background:var(--d3);border:1px solid var(--br);
+  border-radius:8px;padding:10px 13px;
+  color:var(--w);font-family:var(--ft);font-size:13px;
+  outline:none;transition:border-color .25s,background .25s;
+}
+.fi::placeholder{color:var(--g)}
+.fi:focus{border-color:var(--o);background:rgba(255,77,0,.02)}
+.fi:hover:not(:focus){border-color:var(--br2)}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fi-err{border-color:rgba(248,113,113,.5) !important}
+.ferr-txt{font-size:11px;color:var(--red);margin-top:4px;font-family:var(--fb);display:none}
+.ferr-txt.show{display:block}
+
+/* PASSWORD WRAPPER */
+.pw-wrap{position:relative}
+.pw-wrap .fi{padding-right:42px}
+.pw-eye{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--g);cursor:pointer;
+  font-size:14px;transition:color .2s;padding:2px;
+}
+.pw-eye:hover{color:var(--w)}
+
+/* SUBMIT */
+.fsubmit{
+  width:100%;padding:12px;border-radius:9px;background:var(--o);border:none;
+  color:#000;font-family:var(--fb);font-size:13px;font-weight:700;letter-spacing:.5px;
+  cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:6px;
+}
+.fsubmit:hover{background:var(--ol);transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,77,0,.25)}
+.fsubmit:active{transform:translateY(0)}
+.fsubmit.loading{opacity:.6;pointer-events:none}
+
+/* SWITCH */
+.sw{text-align:center;margin-top:18px;font-size:12px;color:var(--g)}
+.sw a{color:var(--o);text-decoration:none;font-weight:600;cursor:pointer}
+.sw a:hover{text-decoration:underline}
+
+/* FORGOT */
+.forgot{font-family:var(--fb);font-size:10px;font-weight:700;color:var(--g);text-decoration:none;float:right;margin-top:-10px;margin-bottom:14px;display:block;transition:color .2s;cursor:pointer}
+.forgot:hover{color:var(--o)}
+
+/* ── ONBOARDING ── */
+.ob-card{
+  width:100%;max-width:620px;
+  background:var(--d2);border:1px solid var(--br);border-radius:16px;
+  overflow:hidden;
+  animation:cardIn .5s cubic-bezier(.16,1,.3,1) both;
+}
+.ob-head{padding:28px 32px 20px;border-bottom:1px solid var(--br)}
+.ob-steps{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.os{display:flex;align-items:center;gap:6px}
+.os-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fb);font-size:9px;font-weight:700;border:1.5px solid var(--br2);color:var(--g);transition:all .3s;flex-shrink:0}
+.os.done .os-n{background:var(--o);border-color:var(--o);color:#000}
+.os.active .os-n{border-color:var(--o);color:var(--o)}
+.os-l{font-family:var(--fb);font-size:10px;font-weight:700;color:var(--g);transition:color .3s}
+.os.done .os-l,.os.active .os-l{color:var(--w)}
+.os-line{height:1px;background:var(--br);flex:1;margin:0 6px;transition:background .3s}
+.os-line.done{background:var(--o)}
+.ob-title{font-family:var(--fd);font-size:28px;letter-spacing:2px;color:var(--w);margin-bottom:4px}
+.ob-sub{font-size:12px;color:var(--g)}
+.ob-body{padding:24px 32px 28px}
+
+/* Step panels */
+.step-panel{display:none}
+.step-panel.active{display:block;animation:cardIn .35s cubic-bezier(.16,1,.3,1) both}
+
+/* Image upload zone */
+.upload-zone{
+  border:1px dashed var(--br2);border-radius:10px;padding:28px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;transition:all .25s;background:var(--d3);
+  position:relative;overflow:hidden;text-align:center;
+}
+.upload-zone:hover{border-color:var(--o);background:rgba(255,77,0,.04)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-ico{font-size:28px;opacity:.5}
+.uz-title{font-family:var(--fb);font-size:12px;font-weight:700;color:var(--w)}
+.uz-sub{font-size:11px;color:var(--g)}
+.uz-preview{width:100%;height:140px;object-fit:cover;border-radius:8px;display:none}
+
+/* Ticket add row */
+.tk-add{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.tk-row{
+  display:grid;grid-template-columns:1fr 100px 28px;gap:8px;align-items:center;
+  background:var(--d3);border:1px solid var(--br);border-radius:8px;padding:10px 12px;
+}
+.tk-name-fi{background:none;border:none;outline:none;color:var(--w);font-family:var(--fb);font-size:12px;font-weight:600;width:100%}
+.tk-name-fi::placeholder{color:var(--g)}
+.tk-price-fi{background:none;border:none;outline:none;color:var(--o);font-family:var(--fd);font-size:16px;text-align:right;width:100%}
+.tk-price-fi::placeholder{color:var(--g2)}
+.tk-del{background:none;border:none;color:var(--g);cursor:pointer;font-size:14px;transition:color .2s;padding:2px}
+.tk-del:hover{color:var(--red)}
+.add-tk-btn{
+  display:flex;align-items:center;gap:7px;padding:8px 12px;
+  border-radius:7px;border:1px dashed var(--br2);background:none;
+  color:var(--g);font-family:var(--fb);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .2s;width:fit-content;
+}
+.add-tk-btn:hover{border-color:var(--o);color:var(--o);background:rgba(255,77,0,.04)}
+
+/* Capacity bar */
+.cap-row{display:flex;align-items:center;gap:10px}
+.cap-row .fi{flex:1}
+.cap-label{font-family:var(--fd);font-size:22px;color:var(--o);min-width:44px;text-align:right}
+
+/* Date row */
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Nav buttons */
+.ob-nav{display:flex;align-items:center;justify-content:space-between;margin-top:24px;gap:10px}
+.btn-back{
+  display:flex;align-items:center;gap:6px;padding:10px 18px;
+  border-radius:8px;border:1px solid var(--br2);background:none;
+  color:var(--g);font-family:var(--fb);font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-back:hover{border-color:rgba(255,255,255,.2);color:var(--w)}
+.btn-next{
+  display:flex;align-items:center;gap:7px;padding:10px 22px;
+  border-radius:8px;background:var(--o);border:none;
+  color:#000;font-family:var(--fb);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .3s cubic-bezier(.16,1,.3,1);
+}
+.btn-next:hover{background:var(--ol);transform:translateY(-1px)}
+.btn-next:active{transform:translateY(0)}
+
+/* Status badge */
+.status-row{display:flex;gap:8px;margin-bottom:14px}
+.st-btn{
+  flex:1;padding:9px;border-radius:8px;border:1px solid var(--br);
+  background:var(--d3);color:var(--g);
+  font-family:var(--fb);font-size:11px;font-weight:700;cursor:pointer;
+  transition:all .2s;text-align:center;
+}
+.st-btn:hover{border-color:var(--br2);color:var(--w)}
+.st-btn.on{border-color:var(--o);background:rgba(255,77,0,.08);color:var(--o)}
+
+/* Success */
+.succ-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:48px 32px;gap:14px;
+}
+.succ-ring{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(74,222,128,.1);border:2px solid rgba(74,222,128,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;animation:pop .5s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.succ-title{font-family:var(--fd);font-size:40px;letter-spacing:2px;color:var(--w)}
+.succ-sub{font-size:13px;color:var(--g);line-height:1.7;max-width:320px}
+.succ-url{
+  background:var(--d3);border:1px solid var(--br);border-radius:8px;
+  padding:10px 16px;font-family:var(--fb);font-size:12px;
+  color:var(--o);letter-spacing:.5px;width:100%;text-align:center;
+}
+.succ-btns{display:flex;flex-direction:column;gap:8px;width:100%}
+.sbtn{width:100%;padding:11px;border-radius:8px;cursor:pointer;font-family:var(--fb);font-size:12px;font-weight:700;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px}
+.sbtn-p{background:var(--o);border:none;color:#000}
+.sbtn-p:hover{background:var(--ol)}
+.sbtn-g{background:none;border:1px solid var(--br2);color:var(--g)}
+.sbtn-g:hover{border-color:rgba(255,255,255,.2);color:var(--w)}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  nav{padding:16px 20px}
+  .card-top,.card-body{padding-left:20px;padding-right:20px}
+  .ob-head,.ob-body{padding-left:20px;padding-right:20px}
+  .fi-row{grid-template-columns:1fr}
+  .date-row{grid-template-columns:1fr}
+  .cap-row{flex-direction:column;align-items:flex-start}
+  .cap-label{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<div class="orbs">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+
+<div class="wrap">
+
+  <nav>
+    <a href="gatepass.html" class="nlogo">GATE<span>PASS</span></a>
+    <a class="nav-link" id="nav-sw" onclick="goLogin()">Sign in</a>
+  </nav>
+
+  <!-- ── SCREEN 1: LOGIN ── -->
+  <div class="screen active" id="sc-login">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-tag">Welcome back</div>
+        <div class="card-title">SIGN IN.</div>
+        <div class="card-sub">Continue to your Gatepass dashboard</div>
+      </div>
+      <div class="card-body">
+        <!-- Google -->
+        <button class="soc-btn" onclick="toast('Google OAuth coming soon')">
+          <svg class="soc-ico" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+        <button class="soc-btn" onclick="toast('GitHub OAuth coming soon')">
+          <svg class="soc-ico" viewBox="0 0 18 18" fill="currentColor"><path fill-rule="evenodd" d="M9 0C4.03 0 0 4.03 0 9c0 3.98 2.58 7.35 6.16 8.54.45.08.61-.2.61-.44v-1.52c-2.5.54-3.03-1.21-3.03-1.21-.41-1.04-1-1.32-1-1.32-.82-.56.06-.55.06-.55.9.06 1.38.93 1.38.93.8 1.37 2.1.97 2.61.74.08-.58.31-.97.57-1.19-1.99-.23-4.08-1-4.08-4.44 0-.98.35-1.78.93-2.41-.09-.23-.4-1.14.09-2.37 0 0 .76-.24 2.49.93a8.67 8.67 0 012.27-.31c.77 0 1.55.1 2.27.31 1.73-1.17 2.49-.93 2.49-.93.49 1.23.18 2.14.09 2.37.58.63.93 1.43.93 2.41 0 3.45-2.1 4.21-4.1 4.43.32.28.61.83.61 1.67v2.48c0 .24.16.53.62.44A9.01 9.01 0 0018 9c0-4.97-4.03-9-9-9z" clip-rule="evenodd"/></svg>
+          Continue with GitHub
+        </button>
+
+        <div class="or"><div class="or-line"></div><span class="or-txt">or</span><div class="or-line"></div></div>
+
+        <div class="fgrp">
+          <label class="flbl">Email</label>
+          <input class="fi" id="l-em" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Password</label>
+          <div class="pw-wrap">
+            <input class="fi" id="l-pw" type="password" placeholder="••••••••" autocomplete="current-password"/>
+            <button class="pw-eye" onclick="togglePw('l-pw',this)" type="button">👁</button>
+          </div>
+        </div>
+        <a class="forgot" onclick="goForgot()">Forgot password?</a>
+
+        <button class="fsubmit" onclick="doLogin()">
+          <span id="l-txt">Sign in →</span>
+        </button>
+
+        <div class="sw">Don't have an account? <a onclick="goSignup()">Create one free →</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: SIGNUP ── -->
+  <div class="screen" id="sc-signup">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-tag">Free forever</div>
+        <div class="card-title">GET STARTED.</div>
+        <div class="card-sub">Create your Gatepass account — zero platform fees</div>
+      </div>
+      <div class="card-body">
+        <button class="soc-btn" onclick="toast('Google OAuth coming soon')">
+          <svg class="soc-ico" viewBox="0 0 18 18" fill="none"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
+          Sign up with Google
+        </button>
+
+        <div class="or"><div class="or-line"></div><span class="or-txt">or</span><div class="or-line"></div></div>
+
+        <div class="fi-row">
+          <div class="fgrp">
+            <label class="flbl">First Name</label>
+            <input class="fi" id="s-fn" type="text" placeholder="Amal" autocomplete="given-name"/>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Last Name</label>
+            <input class="fi" id="s-ln" type="text" placeholder="Mathew" autocomplete="family-name"/>
+          </div>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Work Email</label>
+          <input class="fi" id="s-em" type="email" placeholder="you@college.edu" autocomplete="email"/>
+          <div id="s-em-err" class="ferr-txt">Enter a valid email</div>
+        </div>
+        <div class="fgrp">
+          <label class="flbl">Password</label>
+          <div class="pw-wrap">
+            <input class="fi" id="s-pw" type="password" placeholder="Min. 8 characters"/>
+            <button class="pw-eye" onclick="togglePw('s-pw',this)" type="button">👁</button>
+          </div>
+          <div id="s-pw-err" class="ferr-txt">Password must be at least 8 characters</div>
+        </div>
+
+        <button class="fsubmit" onclick="doSignup()">
+          <span id="s-txt">Create free account →</span>
+        </button>
+
+        <div class="sw">Already have an account? <a onclick="goLogin()">Sign in →</a></div>
+        <div style="margin-top:12px;text-align:center;font-size:11px;color:var(--g)">By signing up you agree to our <a href="#" style="color:var(--o);text-decoration:none">Terms</a> and <a href="#" style="color:var(--o);text-decoration:none">Privacy Policy</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: FORGOT PASSWORD ── -->
+  <div class="screen" id="sc-forgot">
+    <div class="card">
+      <div class="card-top">
+        <div class="card-tag">Account recovery</div>
+        <div class="card-title">RESET PASSWORD.</div>
+        <div class="card-sub">Enter your email and we'll send a reset link</div>
+      </div>
+      <div class="card-body">
+        <div class="fgrp">
+          <label class="flbl">Email Address</label>
+          <input class="fi" id="f-em" type="email" placeholder="you@example.com"/>
+        </div>
+        <button class="fsubmit" onclick="doForgot()">
+          <span id="f-txt">Send reset link →</span>
+        </button>
+        <div class="sw"><a onclick="goLogin()">← Back to sign in</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 4: ONBOARDING ── -->
+  <div class="screen" id="sc-onboard">
+    <div class="ob-card">
+      <div class="ob-head">
+        <div class="ob-steps">
+          <div class="os active" id="ob-s1"><div class="os-n">1</div><span class="os-l">Event info</span></div>
+          <div class="os-line" id="ob-l1"></div>
+          <div class="os" id="ob-s2"><div class="os-n">2</div><span class="os-l">Tickets</span></div>
+          <div class="os-line" id="ob-l2"></div>
+          <div class="os" id="ob-s3"><div class="os-n">3</div><span class="os-l">Publish</span></div>
+        </div>
+        <div class="ob-title" id="ob-title">CREATE YOUR FIRST EVENT.</div>
+        <div class="ob-sub" id="ob-sub">Let's get your event live in under 5 minutes</div>
+      </div>
+      <div class="ob-body">
+
+        <!-- STEP 1: Event info -->
+        <div class="step-panel active" id="sp1">
+          <div class="fgrp">
+            <label class="flbl">Event Name <span style="color:var(--o)">*</span></label>
+            <input class="fi" id="ev-name" type="text" placeholder="e.g. Tathva '26 — NIT Calicut" autocomplete="off"/>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Description</label>
+            <textarea class="fi" id="ev-desc" rows="3" placeholder="What's the event about? What will attendees experience?"></textarea>
+          </div>
+          <div class="date-row">
+            <div class="fgrp">
+              <label class="flbl">Start Date & Time <span style="color:var(--o)">*</span></label>
+              <input class="fi" id="ev-start" type="datetime-local"/>
+            </div>
+            <div class="fgrp">
+              <label class="flbl">End Date & Time</label>
+              <input class="fi" id="ev-end" type="datetime-local"/>
+            </div>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Location</label>
+            <input class="fi" type="text" placeholder="e.g. NIT Calicut Campus, Kozhikode, Kerala"/>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Event Banner</label>
+            <label class="upload-zone" for="ev-banner">
+              <input type="file" id="ev-banner" accept="image/*" onchange="previewBanner(this)"/>
+              <img id="banner-preview" class="uz-preview"/>
+              <div id="uz-ph">
+                <div class="uz-ico">🖼</div>
+                <div class="uz-title">Upload banner image</div>
+                <div class="uz-sub">PNG, JPG or WEBP · Recommended 1600×900</div>
+              </div>
+            </label>
+          </div>
+          <div class="ob-nav">
+            <div></div>
+            <button class="btn-next" onclick="obNext(1)">Next: Tickets →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Tickets -->
+        <div class="step-panel" id="sp2">
+          <div class="fgrp">
+            <label class="flbl">Ticket Types</label>
+            <div class="tk-add" id="tk-add">
+              <div class="tk-row">
+                <input class="tk-name-fi" type="text" placeholder="General Admission" value="General Admission"/>
+                <input class="tk-price-fi" type="text" placeholder="Free" value="500"/>
+                <button class="tk-del" onclick="delTk(this)">✕</button>
+              </div>
+            </div>
+            <button class="add-tk-btn" onclick="addTk()">+ Add ticket type</button>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Total Capacity</label>
+            <div class="cap-row">
+              <input class="fi" id="ev-cap" type="number" placeholder="500" oninput="updateCap(this.value)"/>
+              <span class="cap-label" id="cap-disp">500</span>
+            </div>
+          </div>
+          <div class="fgrp" style="margin-top:4px">
+            <label class="flbl">Registration closes</label>
+            <input class="fi" type="datetime-local"/>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Event visibility</label>
+            <div class="status-row">
+              <button class="st-btn" onclick="pickSt(this)">🌐 Public</button>
+              <button class="st-btn on" onclick="pickSt(this)">📝 Draft</button>
+              <button class="st-btn" onclick="pickSt(this)">🔒 Invite only</button>
+            </div>
+          </div>
+          <div class="ob-nav">
+            <button class="btn-back" onclick="obBack(2)">← Back</button>
+            <button class="btn-next" onclick="obNext(2)">Next: Publish →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Publish -->
+        <div class="step-panel" id="sp3">
+          <div class="fgrp">
+            <label class="flbl">Your event URL</label>
+            <div style="position:relative">
+              <div style="position:absolute;left:13px;top:50%;transform:translateY(-50%);font-family:var(--fb);font-size:11px;color:var(--g);pointer-events:none">gatepass.app/e/</div>
+              <input class="fi" id="ev-slug" type="text" placeholder="tathva-26-nit-calicut" style="padding-left:110px" oninput="updateSlug(this.value)"/>
+            </div>
+            <div style="margin-top:6px;font-size:11px;color:var(--g);font-family:var(--fb)" id="slug-preview">gatepass.app/e/tathva-26-nit-calicut</div>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Organizer name</label>
+            <input class="fi" type="text" placeholder="e.g. NIT Calicut Student Council"/>
+          </div>
+          <div class="fgrp">
+            <label class="flbl">Contact email</label>
+            <input class="fi" type="email" placeholder="contact@tathva.org"/>
+          </div>
+          <div class="fgrp">
+            <label class="flbl" style="margin-bottom:10px">Notify me when</label>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--g)">
+                <input type="checkbox" checked style="accent-color:var(--o);width:14px;height:14px"/>
+                Someone registers
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--g)">
+                <input type="checkbox" checked style="accent-color:var(--o);width:14px;height:14px"/>
+                Event reaches 80% capacity
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--g)">
+                <input type="checkbox" style="accent-color:var(--o);width:14px;height:14px"/>
+                Daily registration summary
+              </label>
+            </div>
+          </div>
+          <div class="ob-nav">
+            <button class="btn-back" onclick="obBack(3)">← Back</button>
+            <button class="btn-next" onclick="obFinish()" style="background:var(--green);color:#000">🚀 Create Event</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Success -->
+        <div class="step-panel" id="sp4">
+          <div class="succ-wrap">
+            <div class="succ-ring">🎉</div>
+            <div class="succ-title">EVENT LIVE!</div>
+            <p class="succ-sub">Your event is created and ready for registrations. Share the link below.</p>
+            <div class="succ-url" id="succ-url">gatepass.app/e/tathva-26-nit-calicut</div>
+            <div class="succ-btns">
+              <button class="sbtn sbtn-p" onclick="toast('Link copied!')">📋 Copy event link</button>
+              <button class="sbtn sbtn-g" onclick="goToDashboard()">Go to dashboard →</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="tk" style="position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--d3);border:1px solid var(--br2);border-radius:9px;padding:11px 16px;font-family:var(--fb);font-size:12px;font-weight:600;color:var(--w);display:flex;align-items:center;gap:8px;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.16,1,.3,1);pointer-events:none;min-width:180px">
+  <span style="color:var(--o)">●</span><span id="tkm">Done</span>
+</div>
+
+<script>
+/* ── NAVIGATION ── */
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goLogin(){
+  show('sc-login');
+  document.getElementById('nav-sw').textContent='Sign in';
+  document.getElementById('nav-sw').onclick=goLogin;
+}
+function goSignup(){
+  show('sc-signup');
+  document.getElementById('nav-sw').textContent='Sign in';
+  document.getElementById('nav-sw').onclick=goLogin;
+}
+function goForgot(){show('sc-forgot')}
+function goToDashboard(){
+  // Mark user as having events so next login goes to dashboard
+  localStorage.setItem('gp_has_events','true');
+  localStorage.setItem('gp_event_name', document.getElementById('ev-name')?.value || 'My Event');
+  window.location.href='dashboard.html';
+}
+
+/* ── AUTH ── */
+function togglePw(id,btn){
+  const fi=document.getElementById(id);
+  fi.type=fi.type==='password'?'text':'password';
+  btn.textContent=fi.type==='password'?'👁':'🙈';
+}
+
+function doLogin(){
+  const btn=document.querySelector('#sc-login .fsubmit');
+  const em=document.getElementById('l-em').value;
+  const pw=document.getElementById('l-pw').value;
+  if(!em||!pw){toast('Please fill in all fields');return}
+  btn.classList.add('loading');
+  document.getElementById('l-txt').textContent='Signing in...';
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    document.getElementById('l-txt').textContent='Sign in →';
+    localStorage.setItem('gp_user_email', em);
+    // Returning user (has created an event before) → dashboard
+    // First time user → onboarding
+    const hasEvents = localStorage.getItem('gp_has_events');
+    if(hasEvents){
+      localStorage.setItem('gp_user_state','returning');
+      window.location.href='dashboard.html';
+    } else {
+      localStorage.setItem('gp_user_state','new');
+      show('sc-onboard');
+      document.getElementById('nav-sw').onclick=()=>{};
+      document.getElementById('nav-sw').textContent='';
+    }
+  },1400);
+}
+
+function doSignup(){
+  const fn=document.getElementById('s-fn').value;
+  const em=document.getElementById('s-em').value;
+  const pw=document.getElementById('s-pw').value;
+  let ok=true;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){
+    document.getElementById('s-em').classList.add('fi-err');
+    document.getElementById('s-em-err').classList.add('show');
+    ok=false;
+  } else {
+    document.getElementById('s-em').classList.remove('fi-err');
+    document.getElementById('s-em-err').classList.remove('show');
+  }
+  if(pw.length<8){
+    document.getElementById('s-pw').classList.add('fi-err');
+    document.getElementById('s-pw-err').classList.add('show');
+    ok=false;
+  } else {
+    document.getElementById('s-pw').classList.remove('fi-err');
+    document.getElementById('s-pw-err').classList.remove('show');
+  }
+  if(!ok)return;
+  const btn=document.querySelector('#sc-signup .fsubmit');
+  btn.classList.add('loading');
+  document.getElementById('s-txt').textContent='Creating account...';
+  setTimeout(()=>{
+    // Brand new user — always goes to onboarding to create first event
+    localStorage.setItem('gp_user_email', em);
+    localStorage.setItem('gp_user_state','new');
+    localStorage.removeItem('gp_has_events');
+    show('sc-onboard');
+    document.getElementById('nav-sw').textContent='';
+  },1400);
+}
+
+function doForgot(){
+  const em=document.getElementById('f-em').value;
+  if(!em){toast('Enter your email address');return}
+  document.getElementById('f-txt').textContent='Sending...';
+  setTimeout(()=>{
+    toast('Reset link sent! Check your inbox.');
+    document.getElementById('f-txt').textContent='Send reset link →';
+    setTimeout(goLogin,1600);
+  },1200);
+}
+
+/* ── ONBOARDING ── */
+let obStep=1;
+const obTitles=['CREATE YOUR FIRST EVENT.','SET UP TICKETS.','REVIEW & PUBLISH.',''];
+const obSubs=['Let\'s get your event live in under 5 minutes','Define ticket types and capacity','Almost there — finalize your event details',''];
+
+function obNext(step){
+  if(step===1){
+    const name=document.getElementById('ev-name').value;
+    if(!name.trim()){toast('Event name is required');return}
+    // Auto-generate slug
+    const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    document.getElementById('ev-slug').value=slug;
+    document.getElementById('slug-preview').textContent='gatepass.app/e/'+slug;
+    document.getElementById('succ-url').textContent='gatepass.app/e/'+slug;
+  }
+  obStep=step+1;
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp'+obStep).classList.add('active');
+  updateObSteps();
+}
+
+function obBack(step){
+  obStep=step-1;
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp'+obStep).classList.add('active');
+  updateObSteps();
+}
+
+function obFinish(){
+  obStep=4;
+  document.querySelectorAll('.step-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp4').classList.add('active');
+  // Mark all steps done
+  ['ob-s1','ob-s2','ob-s3'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className='os done';
+    el.querySelector('.os-n').textContent='✓';
+  });
+  document.getElementById('ob-l1').classList.add('done');
+  document.getElementById('ob-l2').classList.add('done');
+  document.getElementById('ob-title').textContent='EVENT CREATED!';
+  document.getElementById('ob-sub').textContent='Your event is live and ready for registrations';
+}
+
+function updateObSteps(){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById('ob-s'+i);
+    el.className='os '+(i<obStep?'done':i===obStep?'active':'');
+    el.querySelector('.os-n').textContent=i<obStep?'✓':i;
+    if(i<3) document.getElementById('ob-l'+i).className='os-line '+(i<obStep?'done':'');
+  }
+  if(obStep<=3){
+    document.getElementById('ob-title').textContent=obTitles[obStep-1];
+    document.getElementById('ob-sub').textContent=obSubs[obStep-1];
+  }
+}
+
+/* Ticket management */
+function addTk(){
+  const row=document.createElement('div');
+  row.className='tk-row';
+  row.innerHTML=`<input class="tk-name-fi" type="text" placeholder="Ticket name"/><input class="tk-price-fi" type="text" placeholder="Free"/><button class="tk-del" onclick="delTk(this)">✕</button>`;
+  document.getElementById('tk-add').appendChild(row);
+}
+function delTk(btn){
+  const rows=document.querySelectorAll('.tk-row');
+  if(rows.length>1) btn.closest('.tk-row').remove();
+  else toast('At least one ticket type required');
+}
+
+/* Capacity */
+function updateCap(v){
+  document.getElementById('cap-disp').textContent=v||'0';
+}
+
+/* Status */
+function pickSt(btn){
+  document.querySelectorAll('.st-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+/* Slug */
+function updateSlug(v){
+  const clean=v.toLowerCase().replace(/[^a-z0-9-]/g,'-');
+  document.getElementById('slug-preview').textContent='gatepass.app/e/'+(clean||'your-event');
+  document.getElementById('succ-url').textContent='gatepass.app/e/'+(clean||'your-event');
+}
+
+/* Banner preview */
+function previewBanner(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('banner-preview');
+    const ph=document.getElementById('uz-ph');
+    img.src=e.target.result;img.style.display='block';
+    ph.style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+
+/* Toast */
+function toast(msg){
+  const t=document.getElementById('tk');
+  document.getElementById('tkm').textContent=msg;
+  t.style.transform='translateY(0)';t.style.opacity='1';
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>{t.style.transform='translateY(80px)';t.style.opacity='0'},2600);
+}
+</script>
+</body>
+</html>
