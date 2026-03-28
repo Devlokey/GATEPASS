@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { formatPrice, formatDate } from "@/lib/utils";
-import type { Event } from "@/types";
+import { formatDate } from "@/lib/utils";
+import type { Event, Registration } from "@/types";
+
+type EventRow = Event & { ticket_types: { id: string }[]; registrations: Pick<Registration, "status">[] };
 
 export const metadata = { title: "Dashboard — Gatepass" };
 
@@ -46,15 +49,15 @@ export default async function DashboardPage() {
           <StatCard label="Total Events" value={events?.length ?? 0} icon="🗓" />
           <StatCard
             label="Published"
-            value={events?.filter((e: any) => e.status === "published").length ?? 0}
+            value={events?.filter((e: EventRow) => e.status === "published").length ?? 0}
             icon="🟢"
           />
           <StatCard
             label="Total Registrations"
             value={
               events?.reduce(
-                (sum: number, e: any) =>
-                  sum + (e.registrations?.filter((r: any) => r.status !== "cancelled").length ?? 0),
+                (sum: number, e: EventRow) =>
+                  sum + (e.registrations?.filter((r) => r.status !== "cancelled").length ?? 0),
                 0
               ) ?? 0
             }
@@ -75,7 +78,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="events-grid">
-              {events.map((event: any) => (
+              {events.map((event: EventRow) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
@@ -96,8 +99,8 @@ function StatCard({ label, value, icon }: { label: string; value: number; icon: 
   );
 }
 
-function EventCard({ event }: { event: any }) {
-  const confirmed = event.registrations?.filter((r: any) =>
+function EventCard({ event }: { event: EventRow }) {
+  const confirmed = event.registrations?.filter((r) =>
     ["confirmed", "pending"].includes(r.status)
   ).length ?? 0;
   const capacity = event.capacity;
@@ -112,7 +115,7 @@ function EventCard({ event }: { event: any }) {
     <div className="event-card">
       {event.banner_url && (
         <div className="event-card-banner">
-          <img src={event.banner_url} alt={event.title} />
+          <Image src={event.banner_url} alt={event.title} width={400} height={160} style={{ width: "100%", height: "auto", objectFit: "cover" }} />
         </div>
       )}
       <div className="event-card-body">
