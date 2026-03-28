@@ -119,26 +119,26 @@ export default async function ManageEventPage({ params }: { params: { slug: stri
                 <tbody>
                   {registrations.map((reg: RegRow) => (
                     <tr key={reg.id}>
-                      <td>
+                      <td data-label="Attendee">
                         <div className="attendee-cell">
                           <span className="attendee-name">{reg.attendee_name}</span>
                           <span className="attendee-email">{reg.attendee_email}</span>
                         </div>
                       </td>
-                      <td>{reg.ticket_types?.name ?? "—"}</td>
-                      <td>
+                      <td data-label="Ticket">{reg.ticket_types?.name ?? "—"}</td>
+                      <td data-label="Status">
                         <span className={`status-badge status-${reg.status}`}>{reg.status}</span>
                       </td>
-                      <td>
+                      <td data-label="Payment">
                         <span className={`payment-badge payment-${reg.payment_status}`}>{reg.payment_status}</span>
                       </td>
-                      <td>
+                      <td data-label="Check-in">
                         {reg.check_ins?.length > 0
                           ? <span className="checkin-yes">✅ {formatDateTime(reg.check_ins[0].checked_in_at)}</span>
                           : <span className="checkin-no">—</span>
                         }
                       </td>
-                      <td className="date-cell">{formatDateTime(reg.created_at)}</td>
+                      <td data-label="Registered" className="date-cell">{formatDateTime(reg.created_at)}</td>
                     </tr>
                   ))}
                 </tbody>
