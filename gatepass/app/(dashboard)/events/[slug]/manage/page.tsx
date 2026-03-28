@@ -2,6 +2,19 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatDateTime, formatPrice } from "@/lib/utils";
+import type { TicketType, RegistrationStatus, PaymentStatus } from "@/types";
+
+type RegRow = {
+  id: string;
+  attendee_name: string;
+  attendee_email: string;
+  ticket_type_id: string | null;
+  status: RegistrationStatus;
+  payment_status: PaymentStatus;
+  created_at: string;
+  ticket_types: { name: string } | null;
+  check_ins: { checked_in_at: string }[];
+};
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   return { title: `Manage ${params.slug} — Gatepass` };
@@ -30,11 +43,11 @@ export default async function ManageEventPage({ params }: { params: { slug: stri
 
   const confirmed = registrations?.filter((r) => r.status === "confirmed").length ?? 0;
   const waitlisted = registrations?.filter((r) => r.status === "waitlisted").length ?? 0;
-  const checkedIn = registrations?.filter((r: any) => r.check_ins?.length > 0).length ?? 0;
+  const checkedIn = registrations?.filter((r: RegRow) => r.check_ins?.length > 0).length ?? 0;
   const revenue = registrations
     ?.filter((r) => r.payment_status === "paid")
     .reduce((sum, r) => {
-      const ticket = event.ticket_types?.find((t: any) => t.id === r.ticket_type_id);
+      const ticket = event.ticket_types?.find((t: TicketType) => t.id === r.ticket_type_id);
       return sum + (ticket?.price ?? 0);
     }, 0) ?? 0;
 
@@ -104,7 +117,7 @@ export default async function ManageEventPage({ params }: { params: { slug: stri
                   </tr>
                 </thead>
                 <tbody>
-                  {registrations.map((reg: any) => (
+                  {registrations.map((reg: RegRow) => (
                     <tr key={reg.id}>
                       <td>
                         <div className="attendee-cell">

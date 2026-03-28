@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+
+type EventInfo = { id: string; title: string; slug: string; venue: string | null; start_date: string | null; organizer_id: string };
+type TicketInfo = { name: string } | null;
 import { createClient } from "@/lib/supabase/server";
 import {
   sendConfirmationEmail,
@@ -40,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Registration not found" }, { status: 404 });
     }
 
-    const ev = (registration as any).events;
+    const ev = (registration.events as unknown as EventInfo | null);
 
     // Verify the requesting user owns this event
     if (ev?.organizer_id !== user.id) {
@@ -60,7 +63,7 @@ export async function POST(request: NextRequest) {
         ...commonParams,
         eventDate: formatDate(ev?.start_date),
         eventVenue: ev?.venue ?? "Venue TBD",
-        ticketType: (registration as any).ticket_types?.name ?? "General",
+        ticketType: (registration.ticket_types as unknown as TicketInfo)?.name ?? "General",
       });
     } else if (type === "reminder") {
       await sendReminderEmail({
