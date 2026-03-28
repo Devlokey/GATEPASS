@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Gatepass — Dev Server",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "gatepass"],
+      "port": 3000
+    },
+    {
+      "name": "Gatepass — Production Preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start", "--prefix", "gatepass"],
+      "port": 3000
+    }
+  ]
+}
