@@ -1,7 +1,10 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
 const FROM = "Gatepass <noreply@gatepass.app>";
+
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY!);
+}
 
 // ──────────────────────────────────────────────
 // Send confirmation email with QR code
@@ -18,7 +21,7 @@ export async function sendConfirmationEmail(params: {
 }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: params.to,
     subject: `✅ You're registered for ${params.eventTitle}`,
@@ -71,7 +74,7 @@ export async function sendWaitlistPromotionEmail(params: {
 }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: params.to,
     subject: `🎟️ You're off the waitlist — ${params.eventTitle}`,
@@ -110,7 +113,7 @@ export async function sendReminderEmail(params: {
 }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: params.to,
     subject: `⏰ Reminder: ${params.eventTitle} is tomorrow!`,
