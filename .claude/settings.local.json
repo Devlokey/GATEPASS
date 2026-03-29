@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(claude-md-management:revise-claude-md)",
+      "Bash(npx create-next-app@14 . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npx create-next-app@14 gatepass --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --yes)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init --yes --defaults)",
+      "Bash(wmic logicaldisk:*)",
+      "Bash(wc:*)",
+      "Bash(npm run:*)",
+      "Bash(ls \"/c/Users/Amal/OneDrive/Desktop/MYPROJECT/gatepass/app/\\(auth\\)/\")",
+      "Bash(ls \"/c/Users/Amal/OneDrive/Desktop/MYPROJECT/gatepass/app/\\(dashboard\\)/events/create/\")",
+      "Bash(mkdir -p \"C:/Users/Amal/OneDrive/Desktop/MYPROJECT/gatepass/app/\\(public\\)/events/[slug]\")",
+      "Bash(ls \"C:/Users/Amal/OneDrive/Desktop/MYPROJECT/gatepass/app/\\(public\\)\")",
+      "Bash(find \"C:/Users/Amal/OneDrive/Desktop/MYPROJECT/gatepass/app/\\(public\\)\" -type f)",
+      "Bash(npx tsc:*)",
+      "Bash(grep -oP 'className=\\\\{?[\"\"\"\"''''`][^\"\"\"\"''''`}]*[\"\"\"\"''''`]' \"C:/Users/Amal/OneDrive/Desktop/MYPROJECT/gatepass/app/\\(public\\)/events/[slug]/page.tsx\")",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

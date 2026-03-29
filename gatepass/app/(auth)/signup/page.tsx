@@ -27,8 +27,12 @@ export default function SignupPage() {
 
   const strength = getPasswordStrength(password);
 
-  function handleGoogleAuth() {
-    console.log('Google OAuth signup clicked — coming soon');
+  async function handleGoogleAuth() {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {

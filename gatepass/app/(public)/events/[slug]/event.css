@@ -191,7 +191,7 @@
 .ev-title-sub {
   font-size: clamp(22px, 3vw, 40px);
   color: rgba(245, 240, 235, 0.65);
-  letter-spacing: 3px;
+  letter-spacing: 1px;
 }
 
 /* Meta row */
@@ -999,4 +999,50 @@
   .ev-main { padding: 0 16px; }
   .ev-speakers { grid-template-columns: 1fr 1fr; }
   .ev-footer { padding: 20px 16px; }
+}
+
+/* ── MOBILE SHARE ROW — visible below ticket box on mobile ── */
+@media (max-width: 900px) {
+  /* Re-show share row and organizer card on mobile, stacked */
+  .ev-share-row,
+  .ev-org-card { display: flex; flex-direction: row; }
+  .ev-org-card { flex-direction: column; }
+
+  /* Give bottom padding so sticky CTA doesn't cover content */
+  .ev-right { padding-bottom: 90px; }
+
+  /* Capacity strip compact */
+  .ev-cap-strip { gap: 8px; }
+  .ev-cap-bar { max-width: 120px; }
+
+  /* Hero meta items — stack on very small screens */
+  .ev-meta { gap: 10px; }
+  .ev-meta-item { font-size: 12px; }
+
+  /* Status badge smaller */
+  .ev-status { font-size: 9px; padding: 3px 10px; }
+
+  /* Ticket box full width, no margin */
+  .ev-ticket-box { border-radius: 10px; }
+  .ev-tk { padding: 12px 16px; }
+  .ev-tk-price { font-size: 18px; }
+}
+
+/* ── STICKY CTA — safe area for notch/home bar ── */
+.ev-mob-cta {
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 360px) {
+  .ev-hero { height: 380px; }
+  .ev-title { font-size: 32px; }
+  .ev-hero-content { padding: 0 14px 20px; }
+  .ev-mob-cta-btn { padding: 11px 18px; font-size: 12px; }
+  .ev-mob-cta-price { font-size: 19px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .ev-orb, .ev-status-dot { animation: none; }
+  .ev-status-dot { opacity: 1; }
 }

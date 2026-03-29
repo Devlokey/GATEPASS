@@ -1,31 +1,39 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 
-export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+export default function ResetPasswordPage() {
+  const router = useRouter();
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-
   const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (password !== confirm) {
+      setError('Passwords do not match.');
+      return;
+    }
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
       const supabase = createClient();
-      const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
-      if (authError) {
-        setError(authError.message);
-        setLoading(false);
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+      if (updateError) {
+        setError(updateError.message);
         return;
       }
-      setSent(true);
+      setDone(true);
+      setTimeout(() => router.push('/dashboard'), 2000);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -35,7 +43,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="auth-page">
-      {/* Background orbs */}
       <div className="auth-orbs" aria-hidden="true">
         <div className="auth-orb auth-orb-1" />
         <div className="auth-orb auth-orb-2" />
@@ -43,38 +50,23 @@ export default function ForgotPasswordPage() {
       </div>
 
       <div className="auth-card">
-        {sent ? (
-          /* ── Success state ── */
+        {done ? (
           <div className="auth-success">
-            <div className="auth-success-ring" role="img" aria-label="Success">
-              ✓
-            </div>
-            <p className="auth-success-title">CHECK YOUR EMAIL.</p>
-            <p className="auth-success-sub">
-              We&apos;ve sent a password reset link to{' '}
-              <strong style={{ color: 'var(--w)' }}>{email}</strong>. It expires in 15 minutes.
-            </p>
-            <p className="auth-sw" style={{ marginTop: 0 }}>
-              <Link href="/login">← Back to sign in</Link>
-            </p>
+            <div className="auth-success-ring" role="img" aria-label="Success">✓</div>
+            <p className="auth-success-title">PASSWORD UPDATED.</p>
+            <p className="auth-success-sub">Redirecting to your dashboard…</p>
           </div>
         ) : (
           <>
-            {/* Card top */}
             <div className="auth-card-top">
               <div className="auth-card-logo">
-                <Link href="/">
-                  GATE<span>PASS</span>
-                </Link>
+                <Link href="/">GATE<span>PASS</span></Link>
               </div>
               <div className="auth-card-tag">Account recovery</div>
-              <h1 className="auth-card-title">RESET PASSWORD.</h1>
-              <p className="auth-card-sub">
-                Enter your email and we&apos;ll send a reset link
-              </p>
+              <h1 className="auth-card-title">NEW PASSWORD.</h1>
+              <p className="auth-card-sub">Choose a strong password for your account</p>
             </div>
 
-            {/* Card body */}
             <div className="auth-card-body">
               {error && (
                 <div
@@ -94,21 +86,32 @@ export default function ForgotPasswordPage() {
               )}
               <form onSubmit={handleSubmit} noValidate>
                 <div className="auth-fgrp">
-                  <label htmlFor="forgot-email" className="auth-flbl">
-                    Email Address
-                  </label>
+                  <label htmlFor="new-password" className="auth-flbl">New Password</label>
                   <input
-                    id="forgot-email"
-                    type="email"
+                    id="new-password"
+                    type="password"
                     className="auth-fi"
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Min. 8 characters"
+                    autoComplete="new-password"
+                    minLength={8}
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-
+                <div className="auth-fgrp">
+                  <label htmlFor="confirm-password" className="auth-flbl">Confirm Password</label>
+                  <input
+                    id="confirm-password"
+                    type="password"
+                    className="auth-fi"
+                    placeholder="Repeat password"
+                    autoComplete="new-password"
+                    required
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                  />
+                </div>
                 <button
                   type="submit"
                   className={`auth-submit${loading ? ' loading' : ''}`}
@@ -116,19 +119,13 @@ export default function ForgotPasswordPage() {
                   aria-busy={loading}
                 >
                   {loading ? (
-                    <>
-                      <span className="auth-spinner" aria-hidden="true" />
-                      Sending…
-                    </>
+                    <><span className="auth-spinner" aria-hidden="true" />Updating…</>
                   ) : (
-                    'Send reset link →'
+                    'Update password →'
                   )}
                 </button>
               </form>
-
-              <p className="auth-sw">
-                <Link href="/login">← Back to sign in</Link>
-              </p>
+              <p className="auth-sw"><Link href="/login">← Back to sign in</Link></p>
             </div>
           </>
         )}

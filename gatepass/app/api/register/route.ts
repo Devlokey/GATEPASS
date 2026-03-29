@@ -4,6 +4,7 @@ import { sendConfirmationEmail } from "@/lib/resend";
 import { createRazorpayOrder, razorpayKeyId } from "@/lib/razorpay";
 import { formatDate } from "@/lib/utils";
 import type { RegisterPayload } from "@/types";
+import { randomUUID } from "crypto";
 
 export async function POST(request: NextRequest) {
   try {
@@ -82,6 +83,7 @@ export async function POST(request: NextRequest) {
         form_data: form_data ?? {},
         status: registrationStatus,
         payment_status: ticket.price === 0 ? "free" : "pending",
+        qr_code: randomUUID(),
       })
       .select()
       .single();

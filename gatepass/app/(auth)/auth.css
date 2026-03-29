@@ -142,7 +142,7 @@
   font-size: 36px;
   letter-spacing: 2px;
   color: var(--w);
-  line-height: .95;
+  line-height: 1.0;
   margin-bottom: 6px;
 }
 .auth-card-sub {
@@ -165,6 +165,7 @@
   justify-content: center;
   gap: 10px;
   padding: 11px;
+  min-height: 44px;
   border-radius: 9px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, .03);
@@ -223,6 +224,7 @@
 }
 .auth-fi {
   width: 100%;
+  min-height: 44px;
   background: #161616;
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
@@ -267,7 +269,7 @@
 }
 .auth-pw-eye {
   position: absolute;
-  right: 12px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -276,8 +278,13 @@
   cursor: pointer;
   font-size: 14px;
   transition: color .2s;
-  padding: 2px;
+  padding: 0;
   line-height: 1;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .auth-pw-eye:hover {
   color: var(--w);
@@ -525,5 +532,57 @@
   }
   .auth-card-title {
     font-size: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Full-width card, no rounded corners on edges */
+  .auth-page { padding: 0; align-items: flex-end; }
+  .auth-card {
+    border-radius: 20px 20px 0 0;
+    width: 100%; max-width: 100%;
+    max-height: 96vh; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .auth-card-top { padding: 28px 20px 20px; }
+  .auth-card-body { padding: 0 20px 32px; }
+  .auth-card-title { font-size: 28px; }
+
+  /* Touch-friendly inputs */
+  input, select, textarea {
+    font-size: 16px !important; /* prevents iOS zoom */
+    min-height: 48px;
+  }
+
+  /* Safe area for home bar */
+  .auth-card { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+@media (max-width: 360px) {
+  .auth-card-title { font-size: 24px; }
+  .auth-card-top { padding: 24px 16px 16px; }
+  .auth-card-body { padding: 0 16px 28px; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .auth-page::before,
+  .auth-orb {
+    animation: none;
+  }
+  .auth-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .auth-spinner {
+    animation: none;
+    border: 2px solid #000;
+    border-top-color: transparent;
+  }
+  .auth-success-ring {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
