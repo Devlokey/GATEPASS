@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import type { Event, Registration } from "@/types";
+import CopyEventIdButton from "@/components/dashboard/CopyEventIdButton";
 
 export const metadata = { title: "My Events — Gatepass" };
 
@@ -249,6 +250,9 @@ export default async function EventsPage() {
                     >
                       Manage →
                     </Link>
+                  </div>
+                  <div style={{ marginTop: "0.5rem" }}>
+                    <CopyEventIdButton eventId={event.id} />
                   </div>
                 </div>
               </div>
