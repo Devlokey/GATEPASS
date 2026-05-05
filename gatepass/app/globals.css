@@ -1097,6 +1097,110 @@ footer {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   CHECKIN / QR SCANNER PAGE
+   ═══════════════════════════════════════════════════════════════════ */
+
+.checkin-page {
+  min-height: 100vh; background: var(--dk);
+  display: flex; flex-direction: column;
+}
+
+.checkin-header {
+  padding: 20px 32px 16px;
+  background: rgba(9,9,9,.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--br);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.checkin-title {
+  font-family: var(--fd); font-size: 24px; letter-spacing: 1px;
+  color: var(--w); margin: 6px 0 2px;
+}
+
+.checkin-subtitle {
+  font-size: 13px; color: var(--g); font-family: var(--ft);
+}
+
+.checkin-body {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 32px 24px;
+}
+
+/* QR Scanner wrapper */
+.qr-scanner-wrapper {
+  width: 100%; max-width: 480px;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+
+.qr-viewfinder {
+  width: 100%; border-radius: 16px; overflow: hidden;
+  background: var(--d3); border: 1px solid var(--br);
+  min-height: 280px;
+}
+
+/* Override html5-qrcode default styles */
+#qr-scanner-container video { border-radius: 12px; }
+#qr-scanner-container img { display: none; } /* hide the QR icon overlay */
+
+/* Scan result card */
+.scan-result {
+  width: 100%; padding: 20px 24px; border-radius: 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  text-align: center; border: 1px solid;
+  animation: resultPop .25s cubic-bezier(.16,1,.3,1);
+}
+@keyframes resultPop {
+  from { opacity: 0; transform: scale(.95) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.scan-result.success  { background: rgba(74,222,128,.08); border-color: rgba(74,222,128,.25); }
+.scan-result.warning  { background: rgba(251,191,36,.08);  border-color: rgba(251,191,36,.25); }
+.scan-result.error    { background: rgba(239,68,68,.08);   border-color: rgba(239,68,68,.25); }
+
+.scan-result-icon    { font-size: 32px; line-height: 1; }
+.scan-result-name    { font-family: var(--fb); font-size: 18px; font-weight: 700; color: var(--w); }
+.scan-result-ticket  { font-size: 12px; color: var(--g); font-family: var(--ft); }
+.scan-result-message {
+  font-family: var(--fb); font-size: 12px; font-weight: 600;
+  letter-spacing: .5px; margin-top: 4px;
+}
+.scan-result.success .scan-result-message  { color: #4ade80; }
+.scan-result.warning .scan-result-message  { color: #fbbf24; }
+.scan-result.error   .scan-result-message  { color: #f87171; }
+
+/* Scanner controls */
+.scanner-controls { display: flex; gap: 12px; justify-content: center; width: 100%; }
+
+.btn-scan {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 14px 32px; border-radius: 12px;
+  font-family: var(--fb); font-size: 14px; font-weight: 700;
+  background: var(--o); color: #000; border: none; cursor: pointer;
+  transition: background .2s, transform .15s;
+  min-height: 52px; width: 100%; max-width: 280px;
+}
+.btn-scan:hover { background: var(--ol); transform: translateY(-1px); }
+.btn-scan:active { transform: translateY(0); }
+
+.btn-stop {
+  background: var(--d3); color: var(--w);
+  border: 1px solid var(--br);
+}
+.btn-stop:hover { background: #222; border-color: rgba(255,255,255,.2); }
+
+@media (max-width: 480px) {
+  .checkin-header { padding: 14px 16px 12px; }
+  .checkin-title  { font-size: 20px; }
+  .checkin-body   { padding: 20px 16px; }
+  .qr-viewfinder  { min-height: 240px; }
+  .scan-result    { padding: 16px 18px; }
+  .scan-result-name   { font-size: 16px; }
+  .btn-scan { max-width: 100%; font-size: 13px; padding: 13px 24px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    SMALL PHONE ≤ 360px
    ═══════════════════════════════════════════════════════════════════ */
 @media (max-width: 360px) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { sendConfirmationEmail } from "@/lib/resend";
 import { createRazorpayOrder, razorpayKeyId } from "@/lib/razorpay";
 import { formatDate } from "@/lib/utils";
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use service-role client to bypass RLS for capacity check + insert
-    const supabase = createClient();
+    const supabase = createAdminClient();
 
     // 1. Fetch event + ticket type
     const { data: event, error: eventErr } = await supabase

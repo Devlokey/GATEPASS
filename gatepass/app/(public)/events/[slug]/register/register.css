@@ -1,0 +1,342 @@
+/* ── register.css — /events/[slug]/register ── */
+
+.register-page {
+  min-height: 100vh;
+  background: var(--dk);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 20px 80px;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--d2);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.register-header {
+  padding: 28px 32px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--d3);
+}
+
+.register-event-title {
+  font-family: var(--fd);
+  font-size: 28px;
+  letter-spacing: 1.5px;
+  color: var(--w);
+  margin-bottom: 6px;
+}
+
+.register-event-meta {
+  font-size: 13px;
+  color: var(--g);
+  font-family: var(--fb);
+}
+
+/* ── Steps ── */
+.register-step {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.register-step-title {
+  font-family: var(--fd);
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  color: var(--w);
+  margin-bottom: 4px;
+}
+
+/* ── Ticket options ── */
+.ticket-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ticket-option {
+  width: 100%;
+  background: var(--d3);
+  border: 1.5px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 16px 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ticket-option:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ticket-option.selected {
+  border-color: var(--o);
+  background: rgba(255, 77, 0, 0.06);
+}
+
+.ticket-option-name {
+  font-family: var(--fb);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--w);
+  margin-bottom: 3px;
+}
+
+.ticket-option-desc {
+  font-size: 12px;
+  color: var(--g);
+}
+
+.ticket-option-price {
+  font-family: var(--fd);
+  font-size: 22px;
+  color: var(--o);
+  flex-shrink: 0;
+}
+
+/* ── Form fields ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-label {
+  font-family: var(--fb);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--g);
+}
+
+.form-input {
+  width: 100%;
+  background: var(--d3);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: var(--w);
+  font-family: var(--fb);
+  transition: border-color 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: var(--o);
+}
+
+.form-input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.form-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--g);
+  cursor: pointer;
+}
+
+.form-error {
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #f87171;
+  font-family: var(--fb);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--o);
+  color: #000;
+  border: none;
+  border-radius: 9px;
+  padding: 13px 24px;
+  font-family: var(--fb);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--ol);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-full { width: 100%; }
+
+.btn-ghost {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--g);
+  border-radius: 9px;
+  padding: 12px 20px;
+  font-family: var(--fb);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--w);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--g);
+  border-radius: 9px;
+  padding: 12px 20px;
+  font-family: var(--fb);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  color: var(--w);
+}
+
+.register-btn-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* ── Success screen ── */
+.register-success {
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.success-icon {
+  font-size: 52px;
+  line-height: 1;
+}
+
+.success-title {
+  font-family: var(--fd);
+  font-size: 26px;
+  letter-spacing: 1.5px;
+  color: var(--w);
+}
+
+.success-subtitle {
+  font-size: 14px;
+  color: var(--g);
+  line-height: 1.7;
+  max-width: 380px;
+}
+
+.success-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--d3);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 260px;
+}
+
+.success-qr-label {
+  font-family: var(--fb);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--g);
+}
+
+.success-qr-code {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.25);
+  font-family: monospace;
+  word-break: break-all;
+}
+
+/* ── Registration closed ── */
+.registration-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 56px 32px;
+  text-align: center;
+}
+
+.closed-icon { font-size: 48px; }
+
+.registration-closed h2 {
+  font-family: var(--fd);
+  font-size: 24px;
+  letter-spacing: 1.5px;
+  color: var(--w);
+}
+
+.registration-closed p {
+  font-size: 14px;
+  color: var(--g);
+  line-height: 1.7;
+}
+
+/* ── Responsive ── */
+@media (max-width: 560px) {
+  .register-page { padding: 0 0 60px; align-items: flex-start; }
+  .register-card { border-radius: 0; border-left: none; border-right: none; min-height: 100vh; }
+  .register-header { padding: 24px 20px 20px; }
+  .register-step { padding: 24px 20px; }
+  .register-success { padding: 40px 20px; }
+  .registration-closed { padding: 40px 20px; }
+  .register-event-title { font-size: 22px; }
+}

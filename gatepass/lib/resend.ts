@@ -1,6 +1,14 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+// Lazily initialised — avoids throwing at module-load time when
+// RESEND_API_KEY is not yet set (e.g. local dev without email configured).
+let _resend: Resend | null = null;
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null;
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY);
+  return _resend;
+}
+
 const FROM = "Gatepass <noreply@gatepass.app>";
 
 // ──────────────────────────────────────────────
@@ -18,6 +26,11 @@ export async function sendConfirmationEmail(params: {
 }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
+  const resend = getResend();
+  if (!resend) {
+    console.warn("RESEND_API_KEY not configured — skipping confirmation email");
+    return;
+  }
   await resend.emails.send({
     from: FROM,
     to: params.to,
@@ -71,6 +84,11 @@ export async function sendWaitlistPromotionEmail(params: {
 }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
+  const resend = getResend();
+  if (!resend) {
+    console.warn("RESEND_API_KEY not configured — skipping waitlist email");
+    return;
+  }
   await resend.emails.send({
     from: FROM,
     to: params.to,
@@ -110,6 +128,11 @@ export async function sendReminderEmail(params: {
 }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
+  const resend = getResend();
+  if (!resend) {
+    console.warn("RESEND_API_KEY not configured — skipping reminder email");
+    return;
+  }
   await resend.emails.send({
     from: FROM,
     to: params.to,

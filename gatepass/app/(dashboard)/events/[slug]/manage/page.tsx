@@ -70,7 +70,7 @@ export default async function ManageEventPage({ params }: { params: { slug: stri
             <Link href={`/events/${event.slug}`} className="btn-ghost" target="_blank">
               Public Page ↗
             </Link>
-            <Link href={`/events/${event.slug}/manage/checkin`} className="btn-primary">
+            <Link href={`/events/${event.slug}/checkin`} className="btn-primary">
               📷 Check-in Scanner
             </Link>
           </div>

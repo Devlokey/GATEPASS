@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import RegisterForm from "@/components/registration/RegisterForm";
 import { isRegistrationOpen } from "@/lib/utils";
+import "./register.css";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const supabase = createClient();
