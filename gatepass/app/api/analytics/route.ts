@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { EventAnalytics, RegistrationStatus, PaymentStatus } from "@/types";
 
 type CsvReg = {
@@ -32,6 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     const supabase = createClient();
+    const adminSupabase = createAdminClient();
 
     // Auth check
     const { data: { user }, error: authErr } = await supabase.auth.getUser();
@@ -53,7 +55,7 @@ export async function GET(request: NextRequest) {
 
     // ── CSV Export ──────────────────────────────────────────
     if (format === "csv") {
-      const { data: registrations } = await supabase
+      const { data: registrations } = await adminSupabase
         .from("registrations")
         .select("id, attendee_name, attendee_email, attendee_phone, status, payment_status, created_at, ticket_types(name), check_ins(checked_in_at)")
         .eq("event_id", event_id)
@@ -88,7 +90,7 @@ export async function GET(request: NextRequest) {
     }
 
     // ── JSON Analytics ──────────────────────────────────────
-    const { data: registrations } = await supabase
+    const { data: registrations } = await adminSupabase
       .from("registrations")
       .select("id, status, payment_status, ticket_type_id, ticket_types(id, name, price), check_ins(id)")
       .eq("event_id", event_id);

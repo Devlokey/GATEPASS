@@ -87,7 +87,7 @@ export default function CreateEventPage() {
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
 
-  const eventUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/events/${createdSlug || form.slug || 'your-event-slug'}`;
+  const eventUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ''}/events/${createdSlug || form.slug || 'your-event-slug'}`;
 
   /* ── Ticket management ── */
   const addTicket = () => {

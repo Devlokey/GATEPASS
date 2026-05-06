@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { CheckinPayload, CheckinResult } from "@/types";
 
 export async function POST(request: NextRequest) {
@@ -14,7 +15,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Use session client for auth, admin client for DB queries (bypasses RLS)
     const supabase = createClient();
+    const adminSupabase = createAdminClient();
 
     // Authenticate organizer
     const { data: { user }, error: authErr } = await supabase.auth.getUser();
@@ -26,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify organizer owns this event
-    const { data: event } = await supabase
+    const { data: event } = await adminSupabase
       .from("events")
       .select("id, organizer_id")
       .eq("id", event_id)
@@ -40,8 +43,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find registration by QR code
-    const { data: registration } = await supabase
+    // Find registration by QR code (admin client bypasses RLS)
+    const { data: registration } = await adminSupabase
       .from("registrations")
       .select("id, attendee_name, status, ticket_type_id, ticket_types(name)")
       .eq("qr_code", qr_code)
@@ -68,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for existing check-in
-    const { data: existing } = await supabase
+    const { data: existing } = await adminSupabase
       .from("check_ins")
       .select("id, checked_in_at")
       .eq("registration_id", registration.id)
@@ -85,7 +88,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert check-in record
-    const { error: checkinErr } = await supabase.from("check_ins").insert({
+    const { error: checkinErr } = await adminSupabase.from("check_ins").insert({
       registration_id: registration.id,
       checked_in_by: user.id,
     });

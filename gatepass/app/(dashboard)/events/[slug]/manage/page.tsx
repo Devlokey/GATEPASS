@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { formatDate, formatDateTime, formatPrice } from "@/lib/utils";
 import type { TicketType, RegistrationStatus, PaymentStatus } from "@/types";
 
@@ -35,7 +36,9 @@ export default async function ManageEventPage({ params }: { params: { slug: stri
 
   if (!event) notFound();
 
-  const { data: registrations } = await supabase
+  // Use admin client to read registrations (bypasses RLS — ownership already verified above)
+  const adminSupabase = createAdminClient();
+  const { data: registrations } = await adminSupabase
     .from("registrations")
     .select("*, ticket_types(name), check_ins(checked_in_at)")
     .eq("event_id", event.id)
