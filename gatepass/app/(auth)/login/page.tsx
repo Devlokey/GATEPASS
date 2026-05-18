@@ -13,12 +13,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  function handleGoogleAuth() {
-    console.log('Google OAuth clicked — coming soon');
+  async function handleGoogleAuth() {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
   }
 
-  function handleGitHubAuth() {
-    console.log('GitHub OAuth clicked — coming soon');
+  async function handleGitHubAuth() {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
   }
 
   async function handleSubmit(e: React.FormEvent) {
