@@ -69,7 +69,7 @@ export default function QrScanner({ eventId }: QrScannerProps) {
 
   useEffect(() => {
     return () => {
-      qrRef.current?.isScanning && qrRef.current.stop().catch(() => {});
+      if (qrRef.current?.isScanning) { qrRef.current.stop().catch(() => {}); }
     };
   }, []);
 
